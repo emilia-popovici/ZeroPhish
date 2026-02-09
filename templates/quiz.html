@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <title>{{ t['quiz_page_title'] }} {{ lectie.titlu }}</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #ECE0DA;
+            --card-bg: #FFFFFF;
+            --selected-bg: #F1C8CB;
+            --selected-border: #F6B0BB;
+            --dark-green: #7E8C69;
+            --soft-green: #9CAD8C;
+        }
+
+        body { 
+            background-color: var(--bg-color); 
+            min-height: 100vh; 
+            padding: 20px; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+        }
+        
+        .quiz-container { 
+            max-width: 750px; 
+            margin: 30px auto; 
+            background: var(--card-bg); 
+            border-radius: 25px; 
+            box-shadow: 0 10px 40px rgba(126, 140, 105, 0.15); 
+            padding: 50px; 
+            border: 4px solid rgba(255,255,255,0.5);
+        }
+        
+        h5.text-muted { color: var(--dark-green) !important; opacity: 0.8; font-weight: 600; }
+        .badge.bg-primary { background-color: var(--dark-green) !important; }
+        .fw-bold { color: #333; }
+
+        .option-btn { 
+            width: 100%; text-align: left; margin-bottom: 15px; padding: 20px; 
+            border: 2px solid #f1f1f1; border-radius: 15px; background: white; 
+            transition: all 0.2s ease; position: relative; color: #555; 
+            font-size: 1.1rem; cursor: pointer;
+        }
+        
+        .option-btn:hover { 
+            background-color: #fffafb;
+            border-color: var(--selected-border); 
+            transform: translateX(5px);
+        }
+        
+        .option-btn.selected { 
+            border-color: var(--dark-green); 
+            background-color: var(--selected-bg); 
+            color: var(--dark-green); 
+            font-weight: 700; 
+            box-shadow: 0 4px 10px rgba(241, 200, 203, 0.6);
+        }
+        
+        .option-btn.selected::after { 
+            content: '✔'; position: absolute; right: 20px; 
+            color: var(--dark-green); font-size: 1.2rem; 
+        }
+
+        #btn-next, #btn-finish {
+            background-color: var(--dark-green);
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            padding: 12px 30px;
+            box-shadow: 0 4px 10px rgba(126, 140, 105, 0.3);
+        }
+        #btn-next:hover, #btn-finish:hover { 
+            background-color: #6b7859; 
+            transform: translateY(-2px);
+        }
+
+        .review-card { border-radius: 15px; margin-bottom: 20px; padding: 25px; border: 1px solid transparent; }
+        
+        .review-card.correct { 
+            background-color: #eff7ed;
+            border-left: 6px solid var(--dark-green); 
+        }
+        
+        .review-card.wrong { 
+            background-color: #fff5f6;
+            border-left: 6px solid #d9534f;
+        }
+
+        .progress { border-radius: 10px; background-color: #e9ecef; }
+        .progress-bar.bg-success { background-color: var(--dark-green) !important; }
+        .progress-bar.bg-warning { background-color: var(--soft-green) !important; }
+        .progress-bar.bg-danger { background-color: var(--selected-border) !important; }
+
+        .explanation { font-style: italic; color: #666; margin-top: 10px; padding-top: 10px; border-top: 1px dashed #ccc;}
+
+        .btn-primary {
+            background-color: var(--dark-green) !important;
+            border-color: var(--dark-green) !important;
+            color: white;
+        }
+
+        .btn-primary:hover, .btn-primary:active, .btn-primary:focus {
+            background-color: #6b7859 !important;
+            border-color: #6b7859 !important;
+            box-shadow: 0 4px 10px rgba(126, 140, 105, 0.4);
+        }
+        
+        .btn-outline-secondary {
+            color: var(--dark-green) !important;
+            border-color: var(--dark-green) !important;
+        }
+        .btn-outline-secondary:hover {
+            background-color: var(--dark-green) !important;
+            color: white !important;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="quiz-container" id="quiz-box">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h5 class="text-muted m-0">{{ lectie.titlu }}</h5>
+            <span class="badge bg-primary rounded-pill px-3 py-2">{{ t['lbl_question_no'] }} <span id="q-number">1</span> / {{ lectie.quiz_questions|length }}</span>
+        </div>
+        <hr style="opacity: 0.1">
+
+        <div id="question-area">
+            <h3 id="question-text" class="mb-3 fw-bold">...</h3>
+            <p class="text-muted small mb-4 fst-italic" id="instruction-text" style="color: var(--soft-green) !important;">{{ t['lbl_select_correct'] }}</p>
+            <div id="options-area"></div>
+        </div>
+
+        <div class="mt-5 d-flex justify-content-end">
+            <button class="btn btn-primary text-white" id="btn-next" onclick="nextQuestion()">{{ t['btn_next_q'] }} &rarr;</button>
+            <button class="btn btn-success text-white" id="btn-finish" onclick="finishQuiz()" style="display: none;">{{ t['btn_finish_quiz'] }} 🏆</button>
+        </div>
+    </div>
+
+    <div class="quiz-container" id="results-box" style="display: none;">
+        <div class="text-center mb-5">
+            <h1 class="display-3 fw-bold" id="final-score-text" style="color: var(--dark-green);">0/0</h1>
+            <p class="lead" id="final-message">{{ t['msg_bravo'] }}</p>
+            <div class="progress" style="height: 25px;">
+                <div class="progress-bar" id="score-bar" role="progressbar" style="width: 0%"></div>
+            </div>
+        </div>
+        <h3 class="mb-4" style="color: var(--dark-green);">🔍 {{ t['lbl_report'] }}</h3>
+        <div id="review-list"></div>
+        <div class="text-center mt-5">
+            <a href="/lectie/{{ id_curent }}" class="btn btn-outline-secondary px-4 py-2">{{ t['btn_restart'] }}</a>
+            <a href="/" class="btn btn-primary ms-3 px-4 py-2">{{ t['btn_main_menu'] }}</a>
+        </div>
+    </div>
+
+    <form id="score-form" method="POST" action="/quiz/{{ id_curent }}" style="display: none;">
+        <input type="hidden" name="score_data" id="score_data_input">
+    </form>
+
+    <script>
+        const quizData = {{ lectie.quiz_questions | tojson }};
+        let currentStep = 0;
+        let userAnswers = new Array(quizData.length).fill().map(() => []); 
+
+        // TRADUCERE: Pasăm textele din Python în JavaScript
+        const TEXTS = {
+            multi: "{{ t['js_multi_choice'] }}",
+            single: "{{ t['js_single_choice'] }}",
+            alert: "{{ t['js_alert_select'] }}",
+            yours: "{{ t['js_you_chose'] }}",
+            correct_was: "{{ t['js_correct_was'] }}",
+            correct_msg: "{{ t['js_correct_msg'] }}"
+        };
+
+        function loadQuestion(index) {
+            document.getElementById('q-number').innerText = index + 1;
+            document.getElementById('question-text').innerHTML = quizData[index].intrebare;
+            
+            const isMulti = quizData[index].corect.length > 1;
+            // Folosim textele traduse
+            document.getElementById('instruction-text').innerText = isMulti ? TEXTS.multi : TEXTS.single;
+
+            const optionsDiv = document.getElementById('options-area');
+            optionsDiv.innerHTML = '';
+
+            quizData[index].variante.forEach(varianta => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerText = varianta;
+                
+                if (userAnswers[index].includes(varianta)) {
+                    btn.classList.add('selected');
+                }
+
+                btn.onclick = () => toggleOption(varianta, btn, index);
+                optionsDiv.appendChild(btn);
+            });
+
+            updateNavButtons();
+        }
+
+        function toggleOption(raspuns, btn, index) {
+            let currentSelections = userAnswers[index];
+            const isMulti = quizData[index].corect.length > 1;
+
+            if (isMulti) {
+                if (currentSelections.includes(raspuns)) {
+                    currentSelections = currentSelections.filter(item => item !== raspuns);
+                    btn.classList.remove('selected');
+                } else {
+                    currentSelections.push(raspuns);
+                    btn.classList.add('selected');
+                }
+            } else {
+                const allBtns = document.querySelectorAll('.option-btn');
+                allBtns.forEach(b => b.classList.remove('selected'));
+                currentSelections = [raspuns];
+                btn.classList.add('selected');
+            }
+            userAnswers[index] = currentSelections;
+        }
+
+        function updateNavButtons() {
+            const nextBtn = document.getElementById('btn-next');
+            const finishBtn = document.getElementById('btn-finish');
+
+            if (currentStep === quizData.length - 1) {
+                nextBtn.style.display = 'none';
+                finishBtn.style.display = 'block';
+            } else {
+                nextBtn.style.display = 'block';
+                finishBtn.style.display = 'none';
+            }
+        }
+
+        function nextQuestion() {
+            if (userAnswers[currentStep].length === 0) {
+                alert(TEXTS.alert); // Traducere Alertă
+                return;
+            }
+            if (currentStep < quizData.length - 1) {
+                currentStep++;
+                loadQuestion(currentStep);
+            }
+        }
+
+        function finishQuiz() {
+            if (userAnswers[currentStep].length === 0) {
+                alert(TEXTS.alert); // Traducere Alertă
+                return;
+            }
+
+            let score = 0;
+            const reviewList = document.getElementById('review-list');
+            reviewList.innerHTML = '';
+
+            let postData = {};
+
+            quizData.forEach((q, index) => {
+                const userChoiceSorted = [...userAnswers[index]].sort();
+                const correctSorted = [...q.corect].sort();
+                
+                const isCorrect = JSON.stringify(userChoiceSorted) === JSON.stringify(correctSorted);
+                
+                if (isCorrect) score++;
+
+                userAnswers[index].forEach(ans => {
+                    if(!postData[`question_${q.id}`]) postData[`question_${q.id}`] = [];
+                    postData[`question_${q.id}`].push(ans);
+                });
+
+                const card = document.createElement('div');
+                card.className = isCorrect ? 'review-card correct' : 'review-card wrong';
+                
+                let html = `<div class="fw-bold mb-2 fs-5">${index + 1}. ${q.intrebare}</div>`;
+                // Traducere texte raport
+                html += `<div class="mb-1"><span class="badge bg-secondary">${TEXTS.yours}</span> ${userAnswers[index].join(', ')}</div>`;
+                
+                if (!isCorrect) {
+                    html += `<div class="mb-2"><span class="badge bg-success">${TEXTS.correct_was}</span> ${q.corect.join(', ')}</div>`;
+                } else {
+                    html += `<div class="mb-2 text-success fw-bold">✅ ${TEXTS.correct_msg}</div>`;
+                }
+
+                html += `<div class="explanation">💡 ${q.explicatie}</div>`;
+                card.innerHTML = html;
+                reviewList.appendChild(card);
+            });
+
+            document.getElementById('quiz-box').style.display = 'none';
+            document.getElementById('results-box').style.display = 'block';
+            
+            const percentage = Math.round((score / quizData.length) * 100);
+            document.getElementById('final-score-text').innerText = `${score} / ${quizData.length}`;
+            document.getElementById('score-bar').style.width = `${percentage}%`;
+            
+            if (percentage === 100) document.getElementById('score-bar').className = "progress-bar bg-success";
+            else if (percentage >= 50) document.getElementById('score-bar').className = "progress-bar bg-warning";
+            else document.getElementById('score-bar').className = "progress-bar bg-danger";
+
+            submitScoreToServer(postData);
+        }
+
+        function submitScoreToServer(data) {
+            const formData = new FormData();
+            for (const key in data) {
+                data[key].forEach(val => {
+                    formData.append(key, val);
+                });
+            }
+            fetch(window.location.href, {
+                method: 'POST',
+                body: formData
+            }).then(response => {
+                if (response.ok) console.log("Salvat");
+            }).catch(error => console.error("Eroare", error));
+        }
+
+        loadQuestion(currentStep);
+    </script>
+
+</body>
+</html>

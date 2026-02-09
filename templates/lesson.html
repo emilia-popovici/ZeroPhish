@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ lectie.titlu }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #ECE0DA;
+            --card-bg: #FFFFFF;
+            --cherry-pink: #F6B0BB;
+            --tea-rose: #F1C8CB;
+            --dark-green: #7E8C69;
+            --soft-green: #9CAD8C;
+            --text-color: #333;
+        }
+
+        body { 
+            background-color: var(--bg-color); 
+            color: var(--text-color); 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .progress-container {
+            position: fixed; top: 0; left: 0; width: 100%; height: 8px; background: #e6dcd8; z-index: 1000;
+        }
+        .progress-bar {
+            height: 8px; background: var(--cherry-pink); width: 0%; 
+            box-shadow: 0 0 10px rgba(246, 176, 187, 0.8);
+        }
+        
+        .lesson-container { 
+            max-width: 850px; 
+            margin: 60px auto; 
+            background: var(--card-bg); 
+            padding: 60px; 
+            border-radius: 25px;
+            box-shadow: 0 15px 40px rgba(126, 140, 105, 0.1);
+        }
+        
+        h1 { color: var(--dark-green); font-weight: 800; font-size: 2.5rem; }
+        h2 { color: var(--dark-green); margin-top: 1.5rem; }
+        
+        .subcapitol h2 { 
+            border-bottom: 4px solid var(--tea-rose); 
+            display: inline-block;
+            padding-bottom: 5px;
+            margin-bottom: 25px;
+        }
+
+        .lead { color: #666; font-style: italic; }
+
+        .alert {
+            border: none !important;
+            border-radius: 16px !important;
+            padding: 25px !important;
+            margin-bottom: 25px !important;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+        }
+
+        .alert-light {
+            background-color: #FFF5F6 !important; 
+            border-left: 6px solid var(--cherry-pink) !important;
+        }
+        .alert-light h5 {
+            color: #D48A96 !important;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .alert-secondary {
+            background-color: #F7FAF7 !important;
+            border-left: 6px solid var(--soft-green) !important;
+        }
+        .alert-secondary h5 {
+            color: var(--dark-green) !important;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .separator {
+            border: 0; 
+            height: 2px; 
+            background: var(--dark-green); 
+            opacity: 0.15;
+            margin: 60px 0;
+            border-radius: 5px;
+        }
+
+        .btn-outline-secondary {
+            color: var(--dark-green);
+            border-color: var(--dark-green);
+            border-radius: 10px;
+        }
+        .btn-outline-secondary:hover {
+            background-color: var(--dark-green);
+            color: white;
+        }
+
+        .final-box {
+            background-color: #f9fbf7;
+            border: 2px dashed var(--dark-green);
+        }
+
+        .btn-success {
+            background-color: var(--dark-green);
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(126, 140, 105, 0.4);
+        }
+        .btn-success:hover {
+            background-color: #6b7859;
+            transform: translateY(-2px);
+        }
+        
+        img { max-width: 100%; height: auto; border-radius: 12px; }
+    </style>
+</head>
+<body>
+
+    <div class="progress-container">
+        <div class="progress-bar" id="myBar"></div>
+    </div>
+
+    <div class="container pb-5">
+        <a href="/" class="btn btn-outline-secondary mt-5 mb-2">&larr; {{ t['btn_back_menu'] }}</a>
+
+        <div class="lesson-container">
+            <h1 class="mb-3">{{ lectie.titlu }}</h1>
+            <p class="lead mb-5">{{ lectie.descriere }}</p>
+            
+            {% for sub in lectie.subcapitole %}
+                <div class="subcapitol mb-4">
+                    <h2 class="mt-4">{{ sub.titlu }}</h2>
+                    <div class="content fs-5" style="line-height: 1.8;">
+                        {{ sub.continut | safe }}
+                    </div>
+                </div>
+                
+                {% if not loop.last %}
+                    <hr class="separator">
+                {% endif %}
+            {% endfor %}
+
+            <div class="text-center mt-5 p-5 rounded final-box">
+                <h3 class="mb-3">{{ t['msg_theory_done'] }}</h3>
+                <p class="mb-4 text-muted">{{ t['msg_quiz_ready'] }}</p>
+                
+                <a href="/quiz/{{ id_curent }}" class="btn btn-success">{{ t['btn_start_quiz'] }} &rarr;</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.onscroll = function() {myFunction()};
+
+        function myFunction() {
+            var winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            var scrolled = (winScroll / height) * 100;
+            document.getElementById("myBar").style.width = scrolled + "%";
+        }
+    </script>
+</body>
+</html>

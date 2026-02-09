@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contul Google</title>
+    <style>
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            margin: 0;
+            background-color: #f5f5f5;
+            color: #202124;
+        }
+        .header {
+            background-color: white;
+            padding: 10px 20px;
+            border-bottom: 1px solid #dadce0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .logo {
+            font-size: 22px;
+            color: #5f6368;
+        }
+        .user-avatar {
+            background-color: #009688;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            display: flex;
+            gap: 20px;
+        }
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #dadce0;
+            flex: 1;
+        }
+        h2 { margin-top: 0; font-size: 18px; font-weight: 400; }
+        .welcome-text { font-size: 26px; margin-bottom: 20px; }
+        .fake-link { color: #1a73e8; text-decoration: none; font-size: 14px; margin-top: 10px; display: block;}
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="logo">Contul Google</div>
+        <div class="user-avatar">U</div>
+    </div>
+
+    <div class="container" style="display: block; text-align: center;">
+        <div class="welcome-text">Bine ai venit!</div>
+        <p style="color: #5f6368;">Informațiile, confidențialitatea și securitatea sunt sub control.</p>
+    </div>
+
+    <div class="container">
+        <div class="card">
+            <h2>Confidențialitate și personalizare</h2>
+            <p style="font-size: 14px; color: #5f6368;">Vezi datele din Contul Google și alege ce activitate se salvează.</p>
+            <a href="#" class="fake-link">Gestionează datele și confidențialitatea</a>
+        </div>
+        <div class="card">
+            <h2>Securitate</h2>
+            <p style="font-size: 14px; color: #5f6368;">Recomandări pentru a-ți proteja contul.</p>
+            <a href="#" class="fake-link">Detaliile sunt protejate</a>
+        </div>
+    </div>
+
+    <script>
+        setTimeout(function() {
+            window.location.href = "/education";
+        }, 7000);
+    </script>
+
+</body>
+</html>

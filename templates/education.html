@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debriefing - Simulare Securitate</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #fff3cd;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .alert-box {
+            max-width: 900px;
+            width: 100%; 
+            padding: 80px; 
+            background-color: white;
+            border: 2px solid #ffeeba;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            text-align: left;
+            box-sizing: border-box;
+        }
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+        h1 { color: #d9534f; margin-top: 10px; margin-bottom: 5px; line-height: 1.2; }
+        
+        .badge {
+            background-color: #d9534f;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 1px;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        .explanation {
+            background-color: #e8f5e9;
+            border-left: 5px solid #4caf50;
+            padding: 15px;
+            margin-bottom: 30px;
+            font-size: 0.95em;
+        }
+
+        .clues-section {
+            background-color: #fff8e1;
+            border: 1px solid #ffe082;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        .clues-section h3 { margin-top: 0; color: #f57f17; }
+        
+        .clue-item { margin-bottom: 15px; }
+        .clue-title { font-weight: bold; display: block; margin-bottom: 4px; }
+        
+        code {
+            background-color: #eee;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+            color: #d63384;
+            word-break: break-word;
+        }
+
+        .thesis-info {
+            font-size: 0.9em;
+            color: #555;
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .disclaimer { font-style: italic; color: #888; display: block; margin-top: 10px; }
+
+        .copyright-footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            color: #999;
+            font-size: 0.85em;
+        }
+        .copyright-footer strong {
+            color: #666;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+                align-items: flex-start;
+            }
+            .alert-box {
+                padding: 25px;
+                border-radius: 8px;
+            }
+            h1 {
+                font-size: 1.5rem;
+            }
+            .thesis-info, .clues-section, .explanation {
+                padding: 15px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="alert-box">
+        <div class="header">
+            <span class="badge">Simulare Licență</span>
+            <h1>Stop! Aceasta a fost o simulare de atac tip phishing.</h1>
+            <p>Nu te speria, acesta este doar un experiment academic.</p>
+        </div>
+
+        <div class="explanation">
+            <strong>Ce s-a întâmplat?</strong><br>
+            Tocmai ai introdus datele pe o pagină falsă. După ce ai apăsat butonul, scriptul a deschis o filă nouă (New Tab) către pagina reală Google, creând iluzia că "totul e în regulă".
+            <br><br>
+            <strong>Vestea bună:</strong> Datele tale NU au fost salvate. Acest sistem a înregistrat doar faptul că ai căzut în capcană.
+        </div>
+
+        <div class="clues-section">
+            <h3>🔍 Cum trebuia să îți dai seama că e fals?</h3>
+            
+            <div class="clue-item">
+                <span class="clue-title">1. Verifică întotdeauna Link-ul (URL)</span>
+                Un site oficial Google începe mereu cu <code>accounts.google.com</code>. 
+                Site-ul pe care ai intrat tu avea adresa: <code>ngrok-free.app</code>.
+            </div>
+
+            <div class="clue-item">
+                <span class="clue-title">2. Comportamentul Browser-ului</span>
+                Pagina de login s-a deschis într-o fereastră nouă sau tab nou după click? Un site real de autentificare nu face de obicei acest lucru fără motiv.
+            </div>
+
+            <div class="clue-item">
+                <span class="clue-title">3. Sursa Mesajului</span>
+                Ai primit link-ul nesolicitat pe email? Companiile mari nu îți cer niciodată să dai click pe link-uri pentru a "confirma" date sensibile.
+            </div>
+
+            <div class="clue-item">
+                <span class="clue-title">4. Denumirea Site-ului</span>
+                Numele original e Google. Aceasta pagină afișa Goggle.
+            </div>
+        </div>
+
+        <div class="thesis-info">
+            <p>
+                <strong>🎓 Detalii Experiment:</strong> Această simulare face parte din lucrarea de licență a studentului <strong>Andreea-Emilia Popovici</strong>, 
+                în cadrul <strong>Facultății de Științe Economice și Gestiune a Afacerilor, UBB Cluj-Napoca</strong>.
+            </p>
+            <p>
+                Scopul cercetării este de a analiza cum se schimbă rata de accesare a link-urilor dacă oamenii sunt informați referitor la atacurile de phishing.
+            </p>
+            <span class="disclaimer">
+                GDPR & Privacy: Datele introduse (email/parolă) au fost ignorate tehnic de server și nu există nicio înregistrare a acestora. 
+                Singura dată statistică reținută este "Click pe Login".
+            </span>
+        </div>
+
+        <div class="copyright-footer">
+            Creat de <strong>Andreea-Emilia Popovici</strong>
+            <br>
+            &copy; 2025 Toate drepturile rezervate.
+        </div>
+    </div>
+
+</body>
+</html>
