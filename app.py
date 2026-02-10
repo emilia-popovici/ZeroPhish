@@ -1,4 +1,5 @@
 import os
+from datetime import datetime
 from flask import Flask, render_template, redirect, url_for, request, flash, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
@@ -50,7 +51,6 @@ def send_confirmation_email(user_email, username, tip = 'register'):
     
     msg = Message(subiect, sender=app.config['MAIL_USERNAME'], recipients=[user_email])
     msg.html = html_content.format(user=username, link = link)
-    
     mail.send(msg)
 
 @app.context_processor
@@ -71,6 +71,9 @@ def get_current_lessons():
     lang = session.get('lang', 'ro')
     return LECTII_ALL.get(lang, LECTII_ALL['ro'])
 
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(150), unique=True, nullable=False)
@@ -89,32 +92,29 @@ class LessonProgress(db.Model):
     lesson_id = db.Column(db.Integer, nullable=False) 
     score = db.Column(db.Integer, default=0) 
 
+class PhishingReport(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    screenshot = db.Column(db.String(150), nullable=False)
+    uploader_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    date_posted = db.Column(db.DateTime, default=datetime.utcnow)
+    votes_phishing = db.Column(db.Integer, default=0)
+    votes_safe = db.Column(db.Integer, default=0)
+    uploader = db.relationship('User', backref='reports')
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
+# --- AUTH ---
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated: return redirect(url_for('home'))
-    
     lang = session.get('lang', 'ro')
     t = TEXTE.get(lang, TEXTE['ro'])
-
     if request.method == 'POST':
         login_id = request.form.get('login_id') 
         password = request.form.get('password')
-        
-        user = User.query.filter(
-            or_(
-                User.username == login_id,
-                User.email == login_id,
-                User.phone == login_id
-            )
-        ).first()
-
+        user = User.query.filter(or_(User.username == login_id, User.email == login_id, User.phone == login_id)).first()
         if user and check_password_hash(user.password, password):
             if not user.is_email_verified:
                 flash(t['err_email_not_verified'], 'warning')
@@ -123,91 +123,47 @@ def login():
             return redirect(url_for('home'))
         else:
             flash(t['msg_login_fail'], 'danger')
-            
     return render_template('auth.html', mode='login')
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated: return redirect(url_for('home'))
-    
     lang = session.get('lang', 'ro')
     t = TEXTE.get(lang, TEXTE['ro'])
-    
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
         first_name = request.form.get('first_name')
         last_name = request.form.get('last_name')
         email = request.form.get('email')
-        
-        phone_prefix = request.form.get('phone_prefix')
         phone_number = request.form.get('phone_number')
-        full_phone = None
-        
-        if phone_number:
-            clean_number = phone_number.replace(" ", "")
-            if phone_prefix:
-                full_phone = f"{phone_prefix}{clean_number}"
-            else:
-                full_phone = clean_number
-
-        user_exists = User.query.filter(
-            or_(
-                User.username == username,
-                User.email == email if email else False,
-                User.phone == full_phone if full_phone else False
-            )
-        ).first()
-
+        full_phone = f"{request.form.get('phone_prefix')}{phone_number.replace(' ', '')}" if phone_number else None
+        user_exists = User.query.filter(or_(User.username == username, User.email == email, User.phone == full_phone)).first()
         if user_exists:
             flash(t['msg_user_exists'], 'warning')
         else:
             hashed_pw = generate_password_hash(password, method='pbkdf2:sha256')
-
-            new_user = User(
-                username=username, 
-                password=hashed_pw,
-                first_name=first_name,
-                last_name=last_name,
-                email=email,
-                phone=full_phone,
-                is_email_verified=False
-            )
-            
+            new_user = User(username=username, password=hashed_pw, first_name=first_name, last_name=last_name, email=email, phone=full_phone)
             db.session.add(new_user)
             db.session.commit()
-            
             try:
                 send_confirmation_email(email, username, tip = 'register')
                 flash(t['msg_check_email'], 'info')
-            except Exception as e:
-                print(e)
+            except:
                 flash(t['err_email_send'], 'danger')
-
             return redirect(url_for('login'))
-            
     return render_template('auth.html', mode='register')
 
 @app.route('/confirm_email/<token>')
 def confirm_email(token):
-    lang = session.get('lang', 'ro')
-    t = TEXTE.get(lang, TEXTE['ro'])
-    
     try:
         email = serializer.loads(token, salt='email-confirm-salt', max_age=3600)
-    except:
-        flash(t['msg_link_invalid'], 'danger')
-        return redirect(url_for('login'))
-    
-    user = User.query.filter_by(email=email).first_or_404()
-    
-    if user.is_email_verified:
-        flash(t['msg_email_confirmed'], 'success')
-    else:
+        user = User.query.filter_by(email=email).first_or_404()
         user.is_email_verified = True
         db.session.commit()
-        flash(t['msg_email_confirmed'], 'success')
-        
+        flash(TEXTE[session.get('lang', 'ro')]['msg_email_confirmed'], 'success')
+    except:
+        flash(TEXTE[session.get('lang', 'ro')]['msg_link_invalid'], 'danger')
     return redirect(url_for('login'))
 
 @app.route('/logout')
@@ -220,7 +176,6 @@ def logout():
 @login_required
 def home():
     LECTII = get_current_lessons()
-    
     user_progress = LessonProgress.query.filter_by(user_id=current_user.id).all()
     progress_map = {p.lesson_id: p.score for p in user_progress}
     return render_template('dashboard.html', lectii=LECTII, progress_map=progress_map, user=current_user)
@@ -230,20 +185,12 @@ def home():
 def view_lesson(id_lectie):
     LECTII = get_current_lessons()
     lectie = LECTII.get(id_lectie)
-    lang = session.get('lang', 'ro')
-    t = TEXTE.get(lang, TEXTE['ro'])
-    
-    if not lectie: return t['err_lesson_not_found'], 404
-
+    if not lectie: return "Lesson not found", 404
     if id_lectie > 1:
-        scor_anterior = LessonProgress.query.filter_by(
-            user_id=current_user.id,
-            lesson_id= id_lectie -1
-        ).first()
-
-        if not scor_anterior:
-            flash(t['err_complete_previous'], 'warning')
-            return redirect (url_for('home'))
+        prev = LessonProgress.query.filter_by(user_id=current_user.id, lesson_id=id_lectie-1).first()
+        if not prev:
+            flash(TEXTE[session.get('lang', 'ro')]['err_complete_previous'], 'warning')
+            return redirect(url_for('home'))
     return render_template('lesson.html', lectie=lectie, id_curent=id_lectie)
 
 @app.route('/quiz/<int:id_lectie>', methods=['GET', 'POST'])
@@ -251,271 +198,173 @@ def view_lesson(id_lectie):
 def view_quiz(id_lectie):
     LECTII = get_current_lessons()
     lectie = LECTII.get(id_lectie)
-    lang = session.get('lang', 'ro')
-    t = TEXTE.get(lang, TEXTE['ro'])
-    
-    if not lectie: return t['err_lesson_not_found'], 404
-    
     if request.method == 'POST':
-        score = 0
-        total_questions = len(lectie['quiz_questions'])
-        for q in lectie['quiz_questions']:
-            user_answers = request.form.getlist(f"question_{q['id']}")
-            if set(user_answers) == set(q['corect']):
-                score += 1
-        
-        percentage = int((score / total_questions) * 100)
-        progress_entry = LessonProgress.query.filter_by(user_id=current_user.id, lesson_id=id_lectie).first()
-        
-        if progress_entry:
-            if percentage > progress_entry.score: progress_entry.score = percentage
+        score = sum(1 for q in lectie['quiz_questions'] if set(request.form.getlist(f"question_{q['id']}")) == set(q['corect']))
+        percent = int((score / len(lectie['quiz_questions'])) * 100)
+        prog = LessonProgress.query.filter_by(user_id=current_user.id, lesson_id=id_lectie).first()
+        if prog:
+            if percent > prog.score: prog.score = percent
         else:
-            new_progress = LessonProgress(user_id=current_user.id, lesson_id=id_lectie, score=percentage)
-            db.session.add(new_progress)
-        
+            db.session.add(LessonProgress(user_id=current_user.id, lesson_id=id_lectie, score=percent))
         db.session.commit()
-        msg = t['msg_quiz_result'].format(score=score, total=total_questions, percent=percentage)
-        flash(msg, 'success')
-        
         return redirect(url_for('home'))
-
     return render_template('quiz.html', lectie=lectie, id_curent=id_lectie)
 
 def get_all_badges_status(user, progress_map, total_lessons, t):
-    unlocked = []
-    locked = []
-    
+    unlocked, locked = [], []
     media = (sum(progress_map.values()) / total_lessons) if total_lessons > 0 and progress_map else 0
-    lang = session.get('lang', 'ro')
-    t = TEXTE.get(lang, TEXTE['ro'])
-
-    badge_verified = {'id': 'verified', 'icon': '✅', 'title': t['badge_verified_title'], 'desc': t['badge_verified_desc']}
-    if user.is_email_verified:
-        unlocked.append(badge_verified)
-    else:
-        locked.append(badge_verified)
-
-    badge_first = {'id': 'first_step', 'icon': '🎯', 'title': t['badge_first_step_title'], 'desc': t['badge_first_step_desc']}
-    if progress_map:
-        unlocked.append(badge_first)
-    else:
-        locked.append(badge_first)
-
-    badge_student = {'id': 'student', 'icon': '📚', 'title': t['badge_student_title'], 'desc': t['badge_student_desc']}
-    if total_lessons > 0 and len(progress_map) == total_lessons:
-        unlocked.append(badge_student)
-    else:
-        locked.append(badge_student)
-
-    badge_expert = {'id': 'expert', 'icon': '🛡️', 'title': t['badge_expert_title'], 'desc': t['badge_expert_desc']}
-    if media >= 90:
-        unlocked.append(badge_expert)
-    else:
-        locked.append(badge_expert)
-
-    badge_perfect = {'id': 'perfect', 'icon': '🦅', 'title': t['badge_perfect_title'], 'desc': t['badge_perfect_desc']}
-    if any(score == 100 for score in progress_map.values()):
-        unlocked.append(badge_perfect)
-    else:
-        locked.append(badge_perfect)
-
-    return unlocked, locked
-
-@app.route('/leaderboard')
-@login_required
-def leaderboard():
-    lang = session.get('lang', 'ro')
-    t = TEXTE.get(lang, TEXTE['ro'])
     
-    users = User.query.all()
-    leaderboard_data = []
-    total_lessons = len(get_current_lessons())
-
-    for u in users:
-        up = LessonProgress.query.filter_by(user_id=u.id).all()
-        if up:
-            media = sum(p.score for p in up) / total_lessons
-            leaderboard_data.append({
-                'username': u.username,
-                'avatar': u.avatar,
-                'media': int(media),
-                'lessons_count': len(up)
-            })
-
-    leaderboard_data = sorted(leaderboard_data, key=lambda x: x['media'], reverse=True)[:10]
-
-    return render_template('leaderboard.html', top_users=leaderboard_data, user=current_user, t=t)
+    criteria = [
+        ('verified', '✅', user.is_email_verified, t['badge_verified_title'], t['badge_verified_desc']),
+        ('first_step', '🎯', len(progress_map) > 0, t['badge_first_step_title'], t['badge_first_step_desc']),
+        ('student', '📚', len(progress_map) == total_lessons, t['badge_student_title'], t['badge_student_desc']),
+        ('expert', '🛡️', media >= 90, t['badge_expert_title'], t['badge_expert_desc']),
+        ('perfect', '🦅', any(s == 100 for s in progress_map.values()), t['badge_perfect_title'], t['badge_perfect_desc'])
+    ]
+    
+    for id_b, icon, cond, title, desc in criteria:
+        data = {'id': id_b, 'icon': icon, 'title': title, 'desc': desc}
+        unlocked.append(data) if cond else locked.append(data)
+    return unlocked, locked
 
 @app.route('/profil')
 @login_required
 def profil():
     LECTII = get_current_lessons()
-    lang = session.get('lang', 'ro')
-    t = TEXTE.get(lang, TEXTE['ro'])
+    progress = LessonProgress.query.filter_by(user_id=current_user.id).all()
+    progress_map = {p.lesson_id: p.score for p in progress}
+    unlocked, locked = get_all_badges_status(current_user, progress_map, len(LECTII), TEXTE[session.get('lang','ro')])
     
-    user_progress = LessonProgress.query.filter_by(user_id=current_user.id).all()
-    progress_map = {p.lesson_id: p.score for p in user_progress}
-    unlocked_badges, locked_badges = get_all_badges_status(current_user, progress_map, len(LECTII), t)
     stats = []
     total_percent = 0
-    for id_lectie, data in LECTII.items():
-        procent = progress_map.get(id_lectie, 0)
-        nr_intrebari = len(data['quiz_questions'])
-        intrebari_corecte = int((procent / 100) * nr_intrebari)
-        stats.append({
-            'id': id_lectie, 'titlu': data['titlu'],
-            'scor_text': f"{intrebari_corecte}/{nr_intrebari}", 'procent': procent
-        })
-        total_percent += procent
-    media_globala = int(total_percent / len(LECTII)) if LECTII else 0
-    return render_template('profil.html', user=current_user, stats=stats, media_globala=media_globala, unlocked_badges=unlocked_badges,locked_badges=locked_badges, t=t)
+    for id_l, data in LECTII.items():
+        p = progress_map.get(id_l, 0)
+        stats.append({'id': id_l, 'titlu': data['titlu'], 'scor_text': f"{int((p/100)*len(data['quiz_questions']))}/{len(data['quiz_questions'])}", 'procent': p})
+        total_percent += p
+    
+    return render_template('profil.html', user=current_user, stats=stats, media_globala=int(total_percent/len(LECTII)) if LECTII else 0, unlocked_badges=unlocked, locked_badges=locked)
 
-@app.route('/settings')
+@app.route('/settings') 
 @login_required
-def settings():
-    return render_template('settings.html', user=current_user)
+def settings(): return render_template('settings.html', user=current_user)
 
 @app.route('/change_username', methods=['POST'])
 @login_required
 def change_username():
-    lang = session.get('lang', 'ro')
-    t = TEXTE.get(lang, TEXTE['ro'])
-    
-    new_username = request.form.get('new_username')
-    existing_user = User.query.filter_by(username=new_username).first()
-    if existing_user:
-        flash(t['msg_username_taken'], 'warning')
+    new_name = request.form.get('new_username')
+    if User.query.filter_by(username=new_name).first():
+        flash(TEXTE[session.get('lang','ro')]['msg_username_taken'], 'warning')
     else:
-        current_user.username = new_username
+        current_user.username = new_name
         db.session.commit()
-        flash(t['msg_username_changed'], 'success')
+        flash(TEXTE[session.get('lang','ro')]['msg_username_changed'], 'success')
     return redirect(url_for('settings'))
 
 @app.route('/upload_avatar', methods=['POST'])
 @login_required
 def upload_avatar():
-    lang = session.get('lang', 'ro')
-    t = TEXTE.get(lang, TEXTE['ro'])
-    
-    if 'avatar' not in request.files:
-        flash(t['err_no_photo'], 'warning')
-        return redirect(url_for('settings'))
-    
-    file = request.files['avatar']
-    
-    if file.filename == '' or not file:
-        flash(t['err_no_file'], 'warning')
-        return redirect(url_for('settings'))
-    
-    if allowed_file(file.filename):
-        _, extensie = os.path.splitext(file.filename)
-        
-        import secrets
-        random_hex = secrets.token_hex(4)
-        nume_nou = f"user_{current_user.id}_{random_hex}{extensie}"
-        
-        cale_salvare = os.path.join(app.config['UPLOAD_FOLDER'], nume_nou)
-        
+    file = request.files.get('avatar')
+    if file and allowed_file(file.filename):
         if current_user.avatar:
-            cale_veche = os.path.join(app.config['UPLOAD_FOLDER'], current_user.avatar)
-            if os.path.exists(cale_veche):
-                os.remove(cale_veche)
-
-        file.save(cale_salvare)
-        
-        current_user.avatar = nume_nou
+            old = os.path.join(app.config['UPLOAD_FOLDER'], current_user.avatar)
+            if os.path.exists(old): os.remove(old)
+        import secrets
+        name = f"user_{current_user.id}_{secrets.token_hex(4)}{os.path.splitext(file.filename)[1]}"
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], name))
+        current_user.avatar = name
         db.session.commit()
-        
-        flash(t['msg_photo_updated'], 'success')
-    else:
-        flash(t['err_format_not_allowed'], 'danger')
-        
     return redirect(url_for('settings'))
 
 @app.route('/change_password', methods=['POST'])
 @login_required
 def change_password():
-    old = request.form.get('old_password')
-    new = request.form.get('new_password')
-    lang = session.get('lang', 'ro')
-    t = TEXTE.get(lang, TEXTE['ro'])
-    
-    if not check_password_hash(current_user.password, old):
-        flash(t['err_old_password'], 'password_error')
-        return redirect(url_for('settings'))
-    else:
-        current_user.password = generate_password_hash(new, method='pbkdf2:sha256')
+    if check_password_hash(current_user.password, request.form.get('old_password')):
+        current_user.password = generate_password_hash(request.form.get('new_password'), method='pbkdf2:sha256')
         db.session.commit()
-        flash(t['msg_password_changed'], 'success')
-        
+        flash('Password changed', 'success')
     return redirect(url_for('settings'))
 
 @app.route('/delete_account', methods=['POST'])
 @login_required
 def delete_account():
-    lang = session.get('lang', 'ro')
-    t = TEXTE.get(lang, TEXTE['ro'])
-    
     LessonProgress.query.filter_by(user_id=current_user.id).delete()
     db.session.delete(current_user)
     db.session.commit()
     logout_user()
-    flash(t['msg_account_deleted'], 'info')
     return redirect(url_for('login'))
 
 @app.route('/verify_data', methods=['GET', 'POST'])
 @login_required
 def verify_data():
-    lang = session.get('lang', 'ro')
-    t = TEXTE.get(lang, TEXTE['ro'])
-
     if request.method == 'POST':
-        first_name = request.form.get('first_name')
-        last_name = request.form.get('last_name')
+        current_user.first_name = request.form.get('first_name')
+        current_user.last_name = request.form.get('last_name')
         email = request.form.get('email')
-        
-        phone_prefix = request.form.get('phone_prefix')
-        phone_number = request.form.get('phone_number')
-        full_phone = None
-        
-        if phone_number:
-            clean_number = phone_number.replace(" ", "") 
-            if phone_prefix:
-                full_phone = f"{phone_prefix}{clean_number}"
-            else:
-                full_phone = clean_number
-
-        try:
-            email_changed = False
-            if email and email != current_user.email:
-                current_user.email= email
-                current_user.is_email_verified = False
-                email_changed = True
-
-            if first_name: current_user.first_name = first_name
-            if last_name: current_user.last_name = last_name
-            if full_phone: current_user.phone = full_phone
-            
-            db.session.commit()
-
-            if email_changed:
-                try:
-                    send_confirmation_email(current_user.email, current_user.username, tip='update')
-                    flash(t['msg_email_changed_verify'], 'info')
-                except Exception as e:
-                    print(f"Eroare mail: {e}")
-                    flash(t['err_email_send'], 'warning')
-
-            else:
-                flash(t['flash_update_success'], 'success')
-
-        except Exception as e:
-            db.session.rolback()
-            print(e)
-            flash(t['flash_update_error'], 'danger')
-        
-        return redirect (url_for('verify_data'))
+        if email != current_user.email:
+            current_user.email = email
+            current_user.is_email_verified = False
+            send_confirmation_email(email, current_user.username, tip='update')
+        db.session.commit()
+        return redirect(url_for('verify_data'))
     return render_template('verify_data.html', user=current_user)
+
+@app.route('/comunitate')
+@login_required
+def comunitate():
+    reports = PhishingReport.query.order_by(PhishingReport.date_posted.desc()).all()
+    return render_template('community.html', reports=reports, user=current_user)
+
+@app.route('/raporteaza', methods=['GET', 'POST'])
+@login_required
+def raporteaza():
+    if request.method == 'POST':
+        file = request.files.get('screenshot')
+        if file and allowed_file(file.filename):
+            path = os.path.join(app.config['UPLOAD_FOLDER'], 'reports')
+            os.makedirs(path, exist_ok=True)
+            import secrets
+            name = f"report_{secrets.token_hex(8)}{os.path.splitext(file.filename)[1]}"
+            file.save(os.path.join(path, name))
+            db.session.add(PhishingReport(screenshot=name, uploader_id=current_user.id))
+            db.session.commit()
+            return redirect(url_for('comunitate'))
+    return render_template('report_form.html', user=current_user)
+
+@app.route('/vote/<int:report_id>/<string:vote_type>')
+@login_required
+def vote(report_id, vote_type):
+    report = PhishingReport.query.get_or_404(report_id)
+    if vote_type == 'phishing': report.votes_phishing += 1
+    elif vote_type == 'safe': report.votes_safe += 1
+    db.session.commit()
+    return redirect(url_for('comunitate'))
+
+@app.route('/sterge_raport/<int:report_id>', methods=['POST'])
+@login_required
+def sterge_raport(report_id):
+    report = PhishingReport.query.get_or_404(report_id)
+    if report.uploader_id == current_user.id:
+        img_path = os.path.join(app.config['UPLOAD_FOLDER'], 'reports', report.screenshot)
+        if os.path.exists(img_path): os.remove(img_path)
+        db.session.delete(report)
+        db.session.commit()
+        flash("Raport șters.", "info")
+    return redirect(url_for('comunitate'))
+
+@app.route('/leaderboard')
+@login_required
+def leaderboard():
+    t = TEXTE[session.get('lang', 'ro')]
+    users = User.query.all()
+    data = []
+    total_l = len(get_current_lessons())
+    for u in users:
+        prog = LessonProgress.query.filter_by(user_id=u.id).all()
+        if prog:
+            media = sum(p.score for p in prog) / total_l
+            data.append({'username': u.username, 'avatar': u.avatar, 'media': int(media), 'lessons_count': len(prog)})
+    data = sorted(data, key=lambda x: x['media'], reverse=True)[:10]
+    return render_template('leaderboard.html', top_users=data, user=current_user, t=t)
 
 if __name__ == '__main__':
     with app.app_context():

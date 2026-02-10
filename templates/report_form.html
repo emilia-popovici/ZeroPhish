@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="{{ lang_curenta }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{t['btn_report_new']}} - ZeroPhish</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='icons/favicon.ico') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='icons/favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='icons/favicon-16x16.png') }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='icons/apple-touch-icon.png') }}">
+    <link rel="manifest" href="{{ url_for('static', filename='icons/site.webmanifest') }}">
+    <meta name="apple-mobile-web-app-title" content="ZeroPhish">
+    <meta name="application-name" content="ZeroPhish">
+    <meta name="msapplication-TileColor" content="#7E8C69"> <meta name="theme-color" content="#ECE0DA">
+</head>
+<body style="background-color: #ECE0DA;">
+    <div class="container py-5">
+        <div class="settings-card mx-auto" style="max-width: 600px;">
+            <div class="text-center mb-4">
+                <h2 class="fw-bold" style="color: var(--dark-green);">{{t['btn_report_new']}}</h2>
+                <p class="text-muted">{{t['add_ss_phishing']}}</p>
+            </div>
+
+            <form action="/raporteaza" method="POST" enctype="multipart/form-data">
+                <div class="mb-4">
+                    <label class="form-label fw-bold">{{t['screenshot']}}</label>
+                    <input type="file" name="screenshot" class="form-control py-3" style="border-radius: 12px;" required>
+                </div>
+                
+                <div class="d-grid gap-3">
+                    <button type="submit" class="btn py-3 text-white fw-bold" style="background-color: var(--dark-green); border-radius: 12px;"> 
+                        {{t['send_rep']}}
+                    </button>
+                    <a href="/comunitate" class="text-center text-muted text-decoration-none">{{ t['btn_cancel'] }}</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

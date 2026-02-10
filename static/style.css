@@ -412,12 +412,45 @@ text-align: center; color: var(--text-color);
 
 .modal-backdrop.show:nth-of-type(n+2) {display: none !important;}
 
+.dashboard-nav-container {margin-top: 20px; padding: 10px;}
+
+.dash-nav-btn {
+    background-color: rgba(255, 255, 255, 0.5);
+    border: 2px solid transparent;
+    border-radius: 15px;
+    padding: 12px 25px;
+    color: var(--dark-green);
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.dash-nav-btn:hover { transform: translateY(-3px); background-color: white; color: var(--dark-green); box-shadow: 0 6px 15px rgba(0,0,0,0.1);}
+.dash-nav-btn.active {background-color: white; border-color: var(--soft-green);}
+.dash-nav-btn .icon {font-size: 1.2rem;}
+
+
 @media (max-width: 768px) {
     .hero-section {
         padding: 50px 10px 100px 10px;
         border-radius: 0 0 30px 30px;
     }
     .display-4 {font-size: 2rem;}
+
+    .dashboard-nav-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .dash-nav-btn {
+        width: 100%;
+        justify-content: center;
+    }
+
     .auth-card {
         position: relative; top: auto; left: auto; transform: none;
         margin: 30px auto 50px auto; width: 92%; padding: 30px 20px;
