@@ -105,7 +105,6 @@ class PhishingReport(db.Model):
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-# --- AUTH ---
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated: return redirect(url_for('home'))
@@ -137,8 +136,16 @@ def register():
         last_name = request.form.get('last_name')
         email = request.form.get('email')
         phone_number = request.form.get('phone_number')
+        
         full_phone = f"{request.form.get('phone_prefix')}{phone_number.replace(' ', '')}" if phone_number else None
-        user_exists = User.query.filter(or_(User.username == username, User.email == email, User.phone == full_phone)).first()
+        
+        user_exists = User.query.filter(or_(User.username == username, User.email == email)).first()
+        
+        if not user_exists and full_phone:
+            phone_exists = User.query.filter_by(phone=full_phone).first()
+            if phone_exists:
+                user_exists = phone_exists
+
         if user_exists:
             flash(t['msg_user_exists'], 'warning')
         else:
@@ -244,9 +251,10 @@ def profil():
     
     return render_template('profil.html', user=current_user, stats=stats, media_globala=int(total_percent/len(LECTII)) if LECTII else 0, unlocked_badges=unlocked, locked_badges=locked)
 
-@app.route('/settings') 
+@app.route('/settings')
 @login_required
-def settings(): return render_template('settings.html', user=current_user)
+def settings():
+    return render_template('settings.html', user=current_user)
 
 @app.route('/change_username', methods=['POST'])
 @login_required

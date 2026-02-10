@@ -1,13 +1,28 @@
-document.addEventListener('DOMContentLoaded', function() {
-    console.log("Main.js a fost încărcat!");
+function updatePrefix(selectElement) {
+    const wrapper = selectElement.closest('.prefix-wrapper');
+    if (!wrapper) return;
+    const display = wrapper.querySelector('.prefix-display');
+    if(display) display.textContent = selectElement.value;
+    
+    const group = wrapper.closest('.input-group-custom');
+    if (group) {
+        const phoneInput = group.querySelector('input[name="phone_number"]');
+        if (phoneInput) {
+            phoneInput.dispatchEvent(new Event('input')); 
+        }
+    }
+}
 
+window.updatePrefix = updatePrefix;
+
+document.addEventListener('DOMContentLoaded', function() {
     const formInputs = document.querySelectorAll('.form-control-custom');
     
     if (formInputs.length > 0) {
         const patterns = {
             name: /^[a-zA-ZăâîșțĂÂÎȘȚ\s\-]+$/,
             email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-            phone: /^[\d\s]+$/ 
+            phone: /^[\d\s]*$/ 
         };
 
         const prefixSelect = document.querySelector('.prefix-select');
@@ -19,22 +34,22 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (!group) return;
 
                 const button = group.querySelector('button');
-                let errorMsg = group.querySelector('.error-msg');
-                if (!errorMsg && group.parentElement) {
-                    errorMsg = group.parentElement.querySelector('.error-msg');
-                }
+                let errorMsg = group.querySelector('.error-msg') || 
+                               (group.parentElement ? group.parentElement.querySelector('.error-msg') : null);
                 
-                const originalValue = this.getAttribute('data-original');
+                const originalValue = this.getAttribute('data-original') || '';
                 const currentValue = this.value; 
                 let isValid = true;
 
-                if (this.classList.contains('validate-name')) {
-                    isValid = patterns.name.test(currentValue) && currentValue.trim().length > 1;
-                } else if (this.classList.contains('validate-email')) {
-                    isValid = patterns.email.test(currentValue.trim());
-                } else if (this.classList.contains('validate-phone')) {
-                    const cleanPhone = currentValue.replace(/\s/g, ''); 
-                    isValid = patterns.phone.test(currentValue) && cleanPhone.length > 5;
+                if (currentValue.length > 0) {
+                    if (this.classList.contains('validate-name')) {
+                        isValid = patterns.name.test(currentValue) && currentValue.trim().length > 1;
+                    } else if (this.classList.contains('validate-email')) {
+                        isValid = patterns.email.test(currentValue.trim());
+                    } else if (this.classList.contains('validate-phone')) {
+                        const cleanPhone = currentValue.replace(/\s/g, ''); 
+                        isValid = patterns.phone.test(currentValue) && cleanPhone.length > 5;
+                    }
                 }
 
                 if (!isValid && currentValue.length > 0) {
@@ -46,10 +61,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
 
                 if (button) {
-                    const safeOriginal = originalValue ? originalValue.trim() : '';
+                    const safeOriginal = originalValue.trim();
                     const safeCurrent = currentValue.trim();
 
-                    if (isValid && safeCurrent !== safeOriginal && safeCurrent.length > 0) {
+                    if (isValid && safeCurrent !== safeOriginal) {
                         button.classList.remove('btn-disabled');
                         button.classList.add('btn-enabled');
                         button.disabled = false;
@@ -57,6 +72,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     } else {
                         button.classList.remove('btn-enabled');
                         button.classList.add('btn-disabled');
+                        button.disabled = true;
                         button.style.pointerEvents = "none";
                     }
                 }
@@ -81,12 +97,12 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 this.classList.remove('is-invalid');
                 if (userErrorMsg) userErrorMsg.style.display = 'none';
-                
-                if (val.length > 0) {
+                if (val.length >= 3) {
                     saveUserBtn.disabled = false;
                     saveUserBtn.classList.remove('btn-disabled');
                 } else {
                     saveUserBtn.disabled = true;
+                    saveUserBtn.classList.add('btn-disabled');
                 }
             }
         });
@@ -95,7 +111,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const newPassInput = document.getElementById('newPassInput');
     const savePassBtn = document.getElementById('savePassBtn');
     const passErrorMsg = document.getElementById('passErrorMsg');
-    
     const passPattern = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
 
     if (newPassInput && savePassBtn) {
@@ -111,47 +126,33 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 this.classList.remove('is-invalid');
                 if (passErrorMsg) passErrorMsg.style.display = 'none';
-                
-                if (val.length > 0) {
+                if (isValid) {
                     savePassBtn.disabled = false;
                     savePassBtn.classList.remove('btn-disabled');
                 } else {
                     savePassBtn.disabled = true;
+                    savePassBtn.classList.add('btn-disabled');
                 }
             }
         });
     }
 
-    const passError = document.getElementById('passErrorFlag');
-    if (passError) {
+    if (document.getElementById('passErrorFlag')) {
         const modalElement = document.getElementById('passModal');
         if (modalElement && typeof bootstrap !== 'undefined') {
-            const passModal = new bootstrap.Modal(modalElement);
-            passModal.show();
+            new bootstrap.Modal(modalElement).show();
         }
     }
 
     const progressBar = document.getElementById("myBar");
     if (progressBar) {
-        window.onscroll = function() {
+        window.addEventListener('scroll', function() {
             var winScroll = document.body.scrollTop || document.documentElement.scrollTop;
             var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            var scrolled = (winScroll / height) * 100;
-            progressBar.style.width = scrolled + "%";
-        };
+            if (height > 0) {
+                var scrolled = (winScroll / height) * 100;
+                progressBar.style.width = scrolled + "%";
+            }
+        });
     }
 });
-
-window.updatePrefix = function(selectElement) {
-    const wrapper = selectElement.closest('.prefix-wrapper');
-    const display = wrapper.querySelector('.prefix-display');
-    if(display) display.textContent = selectElement.value;
-    
-    const group = wrapper.closest('.input-group-custom');
-    if (group) {
-        const phoneInput = group.querySelector('input[name="phone_number"]');
-        if (phoneInput) {
-            phoneInput.dispatchEvent(new Event('input')); 
-        }
-    }
-};

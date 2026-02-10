@@ -84,7 +84,7 @@
             {% endif %}
             
             <div class="mb-4">
-                <label>{{ t['lbl_pass'] }}</label>
+                <label>{{ t['lbl_pass'] }} *</label>
                 <input type="password" name="password" class="form-control {{ 'validate-password' if mode == 'register' else 'validate-required' }}" required>
                 {% if mode == 'register' %}
                     <div class="error-msg">{{ t['err_password_complex'] }}</div>
