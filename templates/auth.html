@@ -48,9 +48,7 @@
                     <div class="phone-group">
                         <div class="prefix-wrapper">
                             <span class="prefix-display" id="prefixDisplay">+40</span>
-
                             <span class="prefix-arrow">▼</span>
-
                             <select name="phone_prefix" class="prefix-select" onchange="updatePrefix(this)">
                                 {% for tara in lista_tari %}
                                     <option value="{{ tara.code }}" {% if tara.code == '+40' %}selected{% endif %}>
@@ -59,7 +57,6 @@
                                 {% endfor %}
                             </select>
                         </div>
-
                         <input type="text" name="phone_number" class="form-control validate-phone" placeholder="xxx xxx xxx">
                     </div>
                     <div class="error-msg">{{ t['err_phone_invalid'] }}</div>
@@ -67,7 +64,8 @@
 
                 <div class="mb-3">
                     <label>{{ t['lbl_desired_user'] }} *</label>
-                    <input type="text" name="username" class="form-control validate-required" required>
+                    <input type="text" name="username" class="form-control validate-username" required>
+                    <div class="error-msg">{{ t['err_username_short'] }}</div>
                 </div>
 
             {% else %}
@@ -79,7 +77,10 @@
             
             <div class="mb-4">
                 <label>{{ t['lbl_pass'] }} *</label>
-                <input type="password" name="password" class="form-control validate-required" required>
+                <input type="password" name="password" class="form-control {{ 'validate-password' if mode == 'register' else 'validate-required' }}" required>
+                {% if mode == 'register' %}
+                    <div class="error-msg">{{ t['err_password_complex'] }}</div>
+                {% endif %}
             </div>
 
             <button type="submit" id="submitBtn" class="btn btn-primary w-100 py-3 {{ 'btn-disabled' if mode == 'register' else '' }}">
@@ -136,10 +137,14 @@
         {% if mode == 'register' %}
         document.addEventListener('DOMContentLoaded', function() {
             
+            // --- REGULI DE VALIDARE ---
             const patterns = {
                 name: /^[a-zA-ZăâîșțĂÂÎȘȚ\s\-]+$/,
                 email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                phone: /^[\d\s]+$/ 
+                phone: /^[\d\s]+$/,
+                // MODIFICARE: Regex Username (min 3) și Parolă (complexă)
+                username: /^.{3,}$/, 
+                password: /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/
             };
 
             const form = document.getElementById('authForm');
@@ -155,6 +160,7 @@
                 inputs.forEach(input => {
                     const value = input.value.trim();
                     let fieldValid = true;
+
                     if (input.classList.contains('validate-name')) {
                         fieldValid = patterns.name.test(value) && value.length > 1;
                     } 
@@ -162,14 +168,23 @@
                         fieldValid = patterns.email.test(value);
                     } 
                     else if (input.classList.contains('validate-phone') && value.length > 0) {
-                        const cleanPhone = rawValue.replace(/\s/g, '');
-                        fieldValid = patterns.phone.test(rawValue) && cleanPhone.length > 5;
+                        // Bug fix: am schimbat rawValue cu value
+                        const cleanPhone = value.replace(/\s/g, '');
+                        fieldValid = patterns.phone.test(value) && cleanPhone.length > 5;
                     } 
+                    // MODIFICARE: Validare Username
+                    else if (input.classList.contains('validate-username')) {
+                        fieldValid = patterns.username.test(value);
+                    }
+                    // MODIFICARE: Validare Parolă
+                    else if (input.classList.contains('validate-password')) {
+                        fieldValid = patterns.password.test(value);
+                    }
                     else if (input.classList.contains('validate-required')) {
                         fieldValid = value.length > 0;
                     }
 
-                    const errorMsg = input.closest('.mb-3, .col')?.querySelector('.error-msg');
+                    const errorMsg = input.closest('.mb-3, .mb-4, .col')?.querySelector('.error-msg');
                     
                     if (!fieldValid && value.length > 0) {
                         input.classList.add('is-invalid');

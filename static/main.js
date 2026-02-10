@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     console.log("Main.js a fost încărcat!");
+
     const formInputs = document.querySelectorAll('.form-control-custom');
     
     if (formInputs.length > 0) {
@@ -49,7 +50,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     const safeCurrent = currentValue.trim();
 
                     if (isValid && safeCurrent !== safeOriginal && safeCurrent.length > 0) {
-                        console.log("Activare buton pentru:", this.name);
                         button.classList.remove('btn-disabled');
                         button.classList.add('btn-enabled');
                         button.disabled = false;
@@ -64,6 +64,64 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
+    const newUsernameInput = document.getElementById('newUsernameInput');
+    const saveUserBtn = document.getElementById('saveUserBtn');
+    const userErrorMsg = document.getElementById('userErrorMsg');
+
+    if (newUsernameInput && saveUserBtn) {
+        newUsernameInput.addEventListener('input', function() {
+            const val = this.value.trim();
+            const isValid = val.length >= 3;
+
+            if (!isValid && val.length > 0) {
+                this.classList.add('is-invalid');
+                if (userErrorMsg) userErrorMsg.style.display = 'block';
+                saveUserBtn.disabled = true;
+                saveUserBtn.classList.add('btn-disabled');
+            } else {
+                this.classList.remove('is-invalid');
+                if (userErrorMsg) userErrorMsg.style.display = 'none';
+                
+                if (val.length > 0) {
+                    saveUserBtn.disabled = false;
+                    saveUserBtn.classList.remove('btn-disabled');
+                } else {
+                    saveUserBtn.disabled = true;
+                }
+            }
+        });
+    }
+
+    const newPassInput = document.getElementById('newPassInput');
+    const savePassBtn = document.getElementById('savePassBtn');
+    const passErrorMsg = document.getElementById('passErrorMsg');
+    
+    const passPattern = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
+
+    if (newPassInput && savePassBtn) {
+        newPassInput.addEventListener('input', function() {
+            const val = this.value;
+            const isValid = passPattern.test(val);
+
+            if (!isValid && val.length > 0) {
+                this.classList.add('is-invalid');
+                if (passErrorMsg) passErrorMsg.style.display = 'block';
+                savePassBtn.disabled = true;
+                savePassBtn.classList.add('btn-disabled');
+            } else {
+                this.classList.remove('is-invalid');
+                if (passErrorMsg) passErrorMsg.style.display = 'none';
+                
+                if (val.length > 0) {
+                    savePassBtn.disabled = false;
+                    savePassBtn.classList.remove('btn-disabled');
+                } else {
+                    savePassBtn.disabled = true;
+                }
+            }
+        });
+    }
+
     const passError = document.getElementById('passErrorFlag');
     if (passError) {
         const modalElement = document.getElementById('passModal');

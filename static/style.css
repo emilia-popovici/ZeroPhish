@@ -16,6 +16,8 @@ body {
     margin: 0;
     padding: 0;
     overflow-x: hidden;
+    min-height: 100vh;
+    position: relative;
 }
 
 a { text-decoration: none; }
@@ -100,6 +102,71 @@ a { text-decoration: none; }
 .arrow-icon { float: right; font-size: 0.8rem; margin-top: 5px; transition: transform 0.3s;}
 .collapsed .arrow-icon { transform: rotate(-90deg); }
 
+.auth-card {
+    max-width: 500px;
+    width: 90%;
+    background: var(--card-bg);
+    border-radius: 25px;
+    padding: 50px 40px;
+    box-shadow: 0 15px 35px rgba(126, 140, 105, 0.15);
+    text-align: left;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: 0;
+    z-index: 100;
+    border: 2px solid var(--tea-rose);
+}
+
+.brand-title {
+    color: var(--dark-green); font-weight: 800; font-size: 2.5rem; margin-bottom: 30px; text-align: center;
+}
+
+.auth-card .form-control {
+    border-radius: 10px; border: 1px solid #e0e0e0; padding: 12px;
+}
+
+.phone-group {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    gap: 10px;
+    width: 100%;
+    align-items: stretch;
+}
+
+.prefix-wrapper {
+    flex: 0 0 100px; min-width: 100px;
+    position: relative; 
+    background-color: #fff; border: 1px solid #e0e0e0; border-radius: 10px;
+    display: flex; align-items: center; justify-content: space-between; 
+    padding: 0 10px; cursor: pointer;
+}
+
+.prefix-select { 
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; z-index: 2; 
+}
+
+.phone-group input {
+    flex-grow: 1; margin-bottom: 0 !important;
+}
+
+.lang-container { position: relative; display: block; text-align: center; width: 100%; margin-top: 20px;}
+.btn-lang-trigger { background: white; border: 1px solid #ddd; padding: 6px 15px; border-radius: 20px; cursor: pointer; font-size: 0.9rem;font-weight: 500; color: #888; transition: all 0.3s ease;}
+.btn-lang-trigger:hover {background-color: white; color: var(--soft-green); border-color: var(--soft-green);}
+
+.lang-dropdown {
+    display: none; position: absolute; top: 110%; bottom: auto; left: 50%; transform: translateX(-50%); background: white; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-radius: 10px; padding: 10px 0;
+    list-style: none; min-width: 120px; z-index: 100; margin-top: 5px; border: 1px solid #f0f0f0;
+}
+.lang-dropdown.show { display: block;}
+.lang-dropdown li a { display: block; padding: 10px 20px; color: var(--text-color); text-decoration: none; text-align: center; font-weight: 500; transition: all 0.2s;}
+.lang-dropdown li a:hover { background-color: #f9fbf7; color: var(--dark-green);}
+
+.btn-primary { background-color: var(--dark-green); border: none; border-radius: 10px; font-weight: 700; transition: all 0.3s; padding: 12px; width: 100%; margin-top: 10px;}
+.btn-primary:hover { background-color: var(--soft-green); transform: translateY(-2px);}
+
 .settings-card, .profile-card {
     max-width: 550px;
     width: 95%;
@@ -143,14 +210,8 @@ a { text-decoration: none; }
 .form-label { display: block; color: #555; font-weight: 500; margin-bottom: 8px; }
 .input-group-custom { display: flex; gap: 10px; align-items: center; }
 
-.prefix-wrapper {
-    position: relative; background-color: #EBEBEB; border-radius: 8px;
-    height: 50px; min-width: 100px; width: 100px;
-    display: flex; align-items: center; justify-content: space-between; padding: 0 10px; cursor: pointer; box-sizing: border-box; 
-}
 .prefix-display { font-weight: 600; color: #333; font-size: 1rem; pointer-events: none; }
 .prefix-arrow { font-size: 0.8rem; color: #666; margin-left: 5px; pointer-events: none; }
-.prefix-select { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; z-index: 2; }
 
 .form-control-custom {
     flex-grow: 1; background-color: #EBEBEB; border: 2px solid transparent; border-radius: 8px;
@@ -312,15 +373,23 @@ img { max-width: 100%; height: auto; border-radius: 12px; }
 
 .explanation { font-style: italic; color: #666; margin-top: 10px; padding-top: 10px; border-top: 1px dashed #ccc;}
 
+.auth-card .text-center.mt-4 a {
+    color: var(--dark-green) !important; font-weight: 800 !important; font-size: 1.15rem !important; letter-spacing: 0.5px; transition: all 0.3s ease;
+}
+
+.auth-card .text-center.mt-4 a:hover { color: var(--soft-green) !important; text-decoration: underline !important; }
+.auth-card .text-center.mt-4 {padding-top: 25px !important;margin-top: 25px !important;}
 
 @media (max-width: 768px) {
     .hero-section {
         padding: 50px 10px 100px 10px;
         border-radius: 0 0 30px 30px;
     }
-    
-    .display-4 {
-        font-size: 2rem;
+    .display-4 {font-size: 2rem;}
+    .auth-card {
+        position: relative; top: auto; left: auto; transform: none;
+        margin: 30px auto 50px auto; width: 92%; padding: 30px 20px;
+        border-radius: 20px;
     }
 
     .settings-card, .profile-card {
@@ -341,8 +410,7 @@ img { max-width: 100%; height: auto; border-radius: 12px; }
     }
 
     .prefix-wrapper {
-        width: 100%;
-        justify-content: space-between;
+        flex: 0 0 85px; min-width: 85px; padding: 0 5px;
     }
     
     .profil-corner {

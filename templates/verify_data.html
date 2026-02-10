@@ -141,7 +141,7 @@
                         <input type="text" name="phone_number" class="form-control-custom validate-phone" 
                                value="{{ user.phone[3:] if user.phone and user.phone|length > 3 else '' }}" 
                                data-original="{{ user.phone[3:] if user.phone and user.phone|length > 3 else '' }}"
-                               maxlength="15" placeholder="7xx xxx xxx">
+                               maxlength="15" placeholder="xxx xxx xxx">
                                
                         <button type="submit" class="btn-confirm-small btn-disabled">{{ t['btn_confirm'] }}</button>
                     </div>

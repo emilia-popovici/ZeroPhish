@@ -116,6 +116,8 @@ TEXTE = {
             <p style="color: #888; font-size: 0.9em;">Dacă nu vrei să folosești platforma sau nu așteptai acest mail de confirmare, îl poți ignora în siguranță.</p>
             <p>Toate cele bune,<br>ZeroPhish</p>
         """,
+        'err_username_short': 'Numele de utilizator trebuie să aibă minim 3 caractere!',
+        'err_password_complex': 'Parola trebuie să aibă minim 8 caractere, o cifră și un caracter special (@$!%*?&).',
     },
 
     'en': {
@@ -235,6 +237,8 @@ TEXTE = {
             <p style="color: #888; font-size: 0.9em;">If you didn't expect this, you can safely ignore it.</p>
             <p>Best regards,<br>ZeroPhish</p>
         """,
+        'err_username_short': 'Username must be at least 3 characters long!',
+        'err_password_complex': 'Password must be at least 8 characters long, contain a digit and a special character (@$!%*?&).',
     },
 
     'fr': {
@@ -354,6 +358,8 @@ TEXTE = {
             <p style="color: #888; font-size: 0.9em;">Si vous ne vous attendiez pas à cela, vous pouvez l'ignorer en toute sécurité.</p>
             <p>Cordialement,<br>ZeroPhish</p>
         """,
+        'err_username_short': 'Le nom d\'utilisateur doit comporter au moins 3 caractères !',
+        'err_password_complex': 'Le mot de passe doit comporter au moins 8 caractères, contenir un chiffre et un caractère spécial (@$!%*?&).',
     },
 
     'ru': {
@@ -473,5 +479,7 @@ TEXTE = {
             <p style="color: #888; font-size: 0.9em;">Если вы не ожидали этого, вы можете его проигнорировать.</p>
             <p>С наилучшими пожеланиями,<br>ZeroPhish</p>
         """,
+        'err_username_short': 'Имя пользователя должно быть не менее 3 символов!',
+        'err_password_complex': 'Пароль должен быть не менее 8 символов, содержать цифру и специальный символ (@$!%*?&).',
     }
 }

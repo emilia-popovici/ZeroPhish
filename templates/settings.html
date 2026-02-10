@@ -129,13 +129,22 @@
         </div>
     </div>
     
-    <div class="modal fade" id="userModal" tabindex="-1" aria-hidden="true">
+   <div class="modal fade" id="userModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <div class="modal-header"><h5 class="modal-title">{{ t['mod_user_title'] }}</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
+                <div class="modal-header">
+                    <h5 class="modal-title">{{ t['mod_user_title'] }}</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
                 <form action="/change_username" method="POST">
-                    <div class="modal-body p-4"><label>{{ t['lbl_new_name'] }}</label><input type="text" name="new_username" class="form-control" required></div>
-                    <div class="modal-footer"><button type="submit" class="btn btn-modal-action">{{ t['btn_save'] }}</button></div>
+                    <div class="modal-body p-4">
+                        <label>{{ t['lbl_new_name'] }}</label>
+                        <input type="text" name="new_username" id="newUsernameInput" class="form-control" required>
+                        <div class="error-msg" id="userErrorMsg">{{ t['err_username_short'] }}</div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" id="saveUserBtn" class="btn btn-modal-action">{{ t['btn_save'] }}</button>
+                    </div>
                 </form>
             </div>
         </div>
@@ -144,21 +153,32 @@
     <div class="modal fade" id="passModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <div class="modal-header"><h5 class="modal-title">{{ t['mod_pass_title'] }}</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
+                <div class="modal-header">
+                    <h5 class="modal-title">{{ t['mod_pass_title'] }}</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
                 <form action="/change_password" method="POST">
                     <div class="modal-body p-4">
-                        
                         {% with messages = get_flashed_messages(category_filter=["password_error"]) %}
                             {% if messages %}
-                                <div class="alert alert-danger" id="passErrorFlag">
-                                    {{ messages[0] }}
-                                </div>
+                                <div class="alert alert-danger" id="passErrorFlag">{{ messages[0] }}</div>
                             {% endif %}
                         {% endwith %}
-                        <div class="mb-3"><label>{{ t['lbl_old_pass'] }}</label><input type="password" name="old_password" class="form-control" required></div>
-                        <div class="mb-3"><label>{{ t['lbl_new_pass'] }}</label><input type="password" name="new_password" class="form-control" required></div>
+                        
+                        <div class="mb-3">
+                            <label>{{ t['lbl_old_pass'] }}</label>
+                            <input type="password" name="old_password" class="form-control" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label>{{ t['lbl_new_pass'] }}</label>
+                            <input type="password" name="new_password" id="newPassInput" class="form-control" required>
+                            <div class="error-msg" id="passErrorMsg">{{ t['err_password_complex'] }}</div>
+                        </div>
                     </div>
-                    <div class="modal-footer"><button type="submit" class="btn btn-modal-action">{{ t['btn_save'] }}</button></div>
+                    <div class="modal-footer">
+                        <button type="submit" id="savePassBtn" class="btn btn-modal-action">{{ t['btn_save'] }}</button>
+                    </div>
                 </form>
             </div>
         </div>
