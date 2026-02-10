@@ -281,17 +281,83 @@ def view_quiz(id_lectie):
 
     return render_template('quiz.html', lectie=lectie, id_curent=id_lectie)
 
+def get_all_badges_status(user, progress_map, total_lessons, t):
+    unlocked = []
+    locked = []
+    
+    media = (sum(progress_map.values()) / total_lessons) if total_lessons > 0 and progress_map else 0
+    lang = session.get('lang', 'ro')
+    t = TEXTE.get(lang, TEXTE['ro'])
+
+    badge_verified = {'id': 'verified', 'icon': '✅', 'title': t['badge_verified_title'], 'desc': t['badge_verified_desc']}
+    if user.is_email_verified:
+        unlocked.append(badge_verified)
+    else:
+        locked.append(badge_verified)
+
+    badge_first = {'id': 'first_step', 'icon': '🎯', 'title': t['badge_first_step_title'], 'desc': t['badge_first_step_desc']}
+    if progress_map:
+        unlocked.append(badge_first)
+    else:
+        locked.append(badge_first)
+
+    badge_student = {'id': 'student', 'icon': '📚', 'title': t['badge_student_title'], 'desc': t['badge_student_desc']}
+    if total_lessons > 0 and len(progress_map) == total_lessons:
+        unlocked.append(badge_student)
+    else:
+        locked.append(badge_student)
+
+    badge_expert = {'id': 'expert', 'icon': '🛡️', 'title': t['badge_expert_title'], 'desc': t['badge_expert_desc']}
+    if media >= 90:
+        unlocked.append(badge_expert)
+    else:
+        locked.append(badge_expert)
+
+    badge_perfect = {'id': 'perfect', 'icon': '🦅', 'title': t['badge_perfect_title'], 'desc': t['badge_perfect_desc']}
+    if any(score == 100 for score in progress_map.values()):
+        unlocked.append(badge_perfect)
+    else:
+        locked.append(badge_perfect)
+
+    return unlocked, locked
+
+@app.route('/leaderboard')
+@login_required
+def leaderboard():
+    lang = session.get('lang', 'ro')
+    t = TEXTE.get(lang, TEXTE['ro'])
+    
+    users = User.query.all()
+    leaderboard_data = []
+    total_lessons = len(get_current_lessons())
+
+    for u in users:
+        up = LessonProgress.query.filter_by(user_id=u.id).all()
+        if up:
+            media = sum(p.score for p in up) / total_lessons
+            leaderboard_data.append({
+                'username': u.username,
+                'avatar': u.avatar,
+                'media': int(media),
+                'lessons_count': len(up)
+            })
+
+    leaderboard_data = sorted(leaderboard_data, key=lambda x: x['media'], reverse=True)[:10]
+
+    return render_template('leaderboard.html', top_users=leaderboard_data, user=current_user, t=t)
+
 @app.route('/profil')
 @login_required
 def profil():
     LECTII = get_current_lessons()
+    lang = session.get('lang', 'ro')
+    t = TEXTE.get(lang, TEXTE['ro'])
     
     user_progress = LessonProgress.query.filter_by(user_id=current_user.id).all()
     progress_map = {p.lesson_id: p.score for p in user_progress}
+    unlocked_badges, locked_badges = get_all_badges_status(current_user, progress_map, len(LECTII), t)
     stats = []
     total_percent = 0
-    total_lessons = len(LECTII)
-    
     for id_lectie, data in LECTII.items():
         procent = progress_map.get(id_lectie, 0)
         nr_intrebari = len(data['quiz_questions'])
@@ -301,9 +367,8 @@ def profil():
             'scor_text': f"{intrebari_corecte}/{nr_intrebari}", 'procent': procent
         })
         total_percent += procent
-        
-    media_globala = int(total_percent / total_lessons) if total_lessons > 0 else 0
-    return render_template('profil.html', user=current_user, stats=stats, media_globala=media_globala)
+    media_globala = int(total_percent / len(LECTII)) if LECTII else 0
+    return render_template('profil.html', user=current_user, stats=stats, media_globala=media_globala, unlocked_badges=unlocked_badges,locked_badges=locked_badges, t=t)
 
 @app.route('/settings')
 @login_required

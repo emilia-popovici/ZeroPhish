@@ -384,6 +384,34 @@ img { max-width: 100%; height: auto; border-radius: 12px; }
 .card.locked::before { content: '🔒'; position: absolute; top: 15px; right: 15px; font-size: 1.5rem; z-index: 10;}
 .card.locked .btn-outline-primary { background-color: var(--disabled-gray) !important; border-color: var(--disabled-gray) !important; color: white !important;}
 
+.badge-item.clickable-badge {
+width: 110px; cursor: pointer; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+padding: 10px; border-radius: 15px;
+}
+.badge-item.clickable-badge:hover { transform: scale(1.1); background-color: rgba(255, 255, 255, 0.5); }
+
+.badge-icon-container {
+font-size: 2.5rem; background: #ffffff; border-radius: 50%; width: 75px; height: 75px;
+display: flex; align-items: center; justify-content: center; margin: 0 auto;
+border: 3px solid; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); transition: all 0.3s ease;
+}
+
+.badge-title-text {
+margin-top: 12px; font-weight: 700; font-size: 0.85rem; line-height: 1.2;
+text-align: center; color: var(--text-color);
+}
+
+.modal-body h3 { margin-top: 10px; letter-spacing: -0.5px; }
+.modal {z-index: 1060 !important;}
+.modal-backdrop {z-index: 1050 !important; background-color: rgba(0, 0, 0, 0.6) !important;}
+.btn-close {background-color: rgba(0, 0, 0, 0.05); border-radius: 50%; padding: 0.8rem; transition: all 0.2s ease; opacity: 0.5;}
+.btn-close:hover { opacity: 1; background-color: rgba(0,0,0,0.1); transform: rotate(90deg);}
+
+.locked-border { border: 3px solid #d63031 !important; filter: grayscale(1); opacity: 0.7; }
+.border-end-lg {border-right: 1px solid rgba(0, 0, 0, 0.05) !important;}
+
+.modal-backdrop.show:nth-of-type(n+2) {display: none !important;}
+
 @media (max-width: 768px) {
     .hero-section {
         padding: 50px 10px 100px 10px;
@@ -465,6 +493,18 @@ img { max-width: 100%; height: auto; border-radius: 12px; }
         display: block;
         text-align: center;
     }
+
+    .badge-item.clickable-badge { width: 90px; }
+    .badge-icon-container { width: 60px; height: 60px; font-size: 2rem; }
+    .badge-title-text { font-size: 0.75rem; }
+
+    .quiz-container .d-flex.justify-content-between, .quiz-container .d-flex {
+        flex-direction: column !important; gap: 15px !important; align-items: stretch !important;
+    }
+    .quiz-container .btn-success, .quiz-container .btn-outline-secondary, .quiz-container .back-link, .btn-back {
+        width: 100% !important; margin: 0 !important; padding: 15px !important; display: block; text-align: center;
+    }
+    .review-card { padding: 15px; word-wrap: break-word; overflow-wrap: break-word; }
 }
 
 @media (min-width: 769px) and (max-width: 1024px) {
