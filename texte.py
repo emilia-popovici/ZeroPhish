@@ -147,6 +147,7 @@ TEXTE = {
         'screenshot': 'Screenshot',
         'send_rep': 'Trimite raportul',
         'comm_subtitle': 'Analizează și raportează tentativele reale de phishing.',
+        'btn_locked': 'Lecție blocată'
     },
 
     'en': {
@@ -297,6 +298,7 @@ TEXTE = {
         'screenshot': 'Screenshot',
         'send_rep': 'Submit Report',
         'comm_subtitle': 'Analyze and report real phishing attempts.',
+        'btn_locked': 'Lesson Locked'
     },
 
     'fr': {
@@ -447,6 +449,7 @@ TEXTE = {
         'screenshot': 'Capture d\'écran',
         'send_rep': 'Soumettre le rapport',
         'comm_subtitle': 'Analysez et signalez les tentatives de phishing réelles.',
+        'btn_locked': 'Leçon verrouillée'
     },
 
     'ru': {
@@ -597,5 +600,6 @@ TEXTE = {
         'screenshot': 'Скриншот',
         'send_rep': 'Отправить отчет',
         'comm_subtitle': 'Анализируйте и сообщайте о реальных попытках фишинга.',
+        'btn_locked': 'Урок заблокирован'
     }
 }
