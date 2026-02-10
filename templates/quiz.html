@@ -5,135 +5,73 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        :root {
-            --bg-color: #ECE0DA;
-            --card-bg: #FFFFFF;
-            --selected-bg: #F1C8CB;
-            --selected-border: #F6B0BB;
-            --dark-green: #7E8C69;
-            --soft-green: #9CAD8C;
-        }
-
-        body { 
-            background-color: var(--bg-color); 
-            min-height: 100vh; 
-            padding: 20px; 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-        }
-        
-        .quiz-container { 
-            max-width: 750px; 
-            margin: 30px auto; 
-            background: var(--card-bg); 
-            border-radius: 25px; 
-            box-shadow: 0 10px 40px rgba(126, 140, 105, 0.15); 
-            padding: 50px; 
-            border: 4px solid rgba(255,255,255,0.5);
-        }
-        
-        h5.text-muted { color: var(--dark-green) !important; opacity: 0.8; font-weight: 600; }
-        .badge.bg-primary { background-color: var(--dark-green) !important; }
-        .fw-bold { color: #333; }
-
-        .option-btn { 
-            width: 100%; text-align: left; margin-bottom: 15px; padding: 20px; 
-            border: 2px solid #f1f1f1; border-radius: 15px; background: white; 
-            transition: all 0.2s ease; position: relative; color: #555; 
-            font-size: 1.1rem; cursor: pointer;
-        }
-        
-        .option-btn:hover { 
-            background-color: #fffafb;
-            border-color: var(--selected-border); 
-            transform: translateX(5px);
-        }
-        
-        .option-btn.selected { 
-            border-color: var(--dark-green); 
-            background-color: var(--selected-bg); 
-            color: var(--dark-green); 
-            font-weight: 700; 
-            box-shadow: 0 4px 10px rgba(241, 200, 203, 0.6);
-        }
-        
-        .option-btn.selected::after { 
-            content: '✔'; position: absolute; right: 20px; 
-            color: var(--dark-green); font-size: 1.2rem; 
-        }
-
-        #btn-next, #btn-finish {
-            background-color: var(--dark-green);
-            border: none;
-            border-radius: 12px;
-            font-size: 1.1rem;
-            padding: 12px 30px;
-            box-shadow: 0 4px 10px rgba(126, 140, 105, 0.3);
-        }
-        #btn-next:hover, #btn-finish:hover { 
-            background-color: #6b7859; 
-            transform: translateY(-2px);
-        }
-
-        .review-card { border-radius: 15px; margin-bottom: 20px; padding: 25px; border: 1px solid transparent; }
-        
-        .review-card.correct { 
-            background-color: #eff7ed;
-            border-left: 6px solid var(--dark-green); 
-        }
-        
-        .review-card.wrong { 
-            background-color: #fff5f6;
-            border-left: 6px solid #d9534f;
-        }
-
-        .progress { border-radius: 10px; background-color: #e9ecef; }
-        .progress-bar.bg-success { background-color: var(--dark-green) !important; }
-        .progress-bar.bg-warning { background-color: var(--soft-green) !important; }
-        .progress-bar.bg-danger { background-color: var(--selected-border) !important; }
-
-        .explanation { font-style: italic; color: #666; margin-top: 10px; padding-top: 10px; border-top: 1px dashed #ccc;}
-
-        .btn-primary {
-            background-color: var(--dark-green) !important;
-            border-color: var(--dark-green) !important;
-            color: white;
-        }
-
-        .btn-primary:hover, .btn-primary:active, .btn-primary:focus {
-            background-color: #6b7859 !important;
-            border-color: #6b7859 !important;
-            box-shadow: 0 4px 10px rgba(126, 140, 105, 0.4);
-        }
-        
-        .btn-outline-secondary {
-            color: var(--dark-green) !important;
-            border-color: var(--dark-green) !important;
-        }
-        .btn-outline-secondary:hover {
-            background-color: var(--dark-green) !important;
-            color: white !important;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
 
+    <button class="profil-corner" type="button" data-bs-toggle="offcanvas" data-bs-target="#sideMenu">
+        <div class="profil-badge">
+            {% if current_user.avatar %}
+                <img src="{{ url_for('static', filename='uploads/' + current_user.avatar) }}">
+            {% else %}
+                {{ current_user.username[0] | upper }}
+            {% endif %}
+        </div>
+    </button>
+
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="sideMenu">
+        <div class="offcanvas-header d-flex align-items-center">
+            <div class="avatar-large">
+                {% if current_user.avatar %}
+                    <img src="{{ url_for('static', filename='uploads/' + current_user.avatar) }}">
+                {% else %}
+                    {{ current_user.username[0] | upper }}
+                {% endif %}
+            </div>
+            <div class="user-info"><h3>@{{ current_user.username }}</h3></div>
+            <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-3" data-bs-dismiss="offcanvas"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div class="sidebar-nav mt-3">
+                <a href="/" class="nav-link-custom">{{ t['nav_dashboard'] }}</a>
+                <a href="/profil" class="nav-link-custom">{{ t['nav_scores'] }}</a>
+                
+                <a href="#langSubmenu" data-bs-toggle="collapse" class="nav-link-custom collapsed">
+                    {{ t['nav_lang'] }} <span class="arrow-icon">▼</span>
+                </a>
+                <ul class="collapse sub-menu" id="langSubmenu">
+                    <li><a href="/set_lang/ro">Română</a></li>
+                    <li><a href="/set_lang/en">English</a></li>
+                    <li><a href="/set_lang/ru">Русский</a></li>
+                    <li><a href="/set_lang/fr">Français</a></li>
+                </ul>
+
+                <a href="/settings" class="nav-link-custom">{{ t['nav_settings'] }}</a>
+                <hr style="border-color: rgba(255,255,255,0.3); margin: 20px 0;">
+                <a href="/logout" class="nav-link-custom" style="color: #ffcccc;">{{ t['nav_logout'] }}</a>
+            </div>
+        </div>
+    </div>
     <div class="quiz-container" id="quiz-box">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h5 class="text-muted m-0">{{ lectie.titlu }}</h5>
-            <span class="badge bg-primary rounded-pill px-3 py-2">{{ t['lbl_question_no'] }} <span id="q-number">1</span> / {{ lectie.quiz_questions|length }}</span>
+            <h5 class="text-muted m-0" style="color: var(--dark-green) !important;">{{ lectie.titlu }}</h5>
+            <span class="badge bg-primary rounded-pill px-3 py-2" style="background-color: var(--dark-green) !important;">
+                {{ t['lbl_question_no'] }} <span id="q-number">1</span> / {{ lectie.quiz_questions|length }}
+            </span>
         </div>
         <hr style="opacity: 0.1">
 
         <div id="question-area">
             <h3 id="question-text" class="mb-3 fw-bold">...</h3>
-            <p class="text-muted small mb-4 fst-italic" id="instruction-text" style="color: var(--soft-green) !important;">{{ t['lbl_select_correct'] }}</p>
+            <p class="text-muted small mb-4 fst-italic" id="instruction-text" style="color: var(--soft-green) !important;">
+                {{ t['lbl_select_correct'] }}
+            </p>
             <div id="options-area"></div>
         </div>
 
         <div class="mt-5 d-flex justify-content-end">
-            <button class="btn btn-primary text-white" id="btn-next" onclick="nextQuestion()">{{ t['btn_next_q'] }} &rarr;</button>
-            <button class="btn btn-success text-white" id="btn-finish" onclick="finishQuiz()" style="display: none;">{{ t['btn_finish_quiz'] }} 🏆</button>
+            <button class="btn" id="btn-next" onclick="nextQuestion()">{{ t['btn_next_q'] }} &rarr;</button>
+            <button class="btn" id="btn-finish" onclick="finishQuiz()" style="display: none;">{{ t['btn_finish_quiz'] }} 🏆</button>
         </div>
     </div>
 
@@ -148,8 +86,8 @@
         <h3 class="mb-4" style="color: var(--dark-green);">🔍 {{ t['lbl_report'] }}</h3>
         <div id="review-list"></div>
         <div class="text-center mt-5">
-            <a href="/lectie/{{ id_curent }}" class="btn btn-outline-secondary px-4 py-2">{{ t['btn_restart'] }}</a>
-            <a href="/" class="btn btn-primary ms-3 px-4 py-2">{{ t['btn_main_menu'] }}</a>
+            <a href="/lectie/{{ id_curent }}" class="btn-back px-4 py-2" style="margin-top: 0; margin-right: 15px;">{{ t['btn_restart'] }}</a>
+            <a href="/" class="btn-success ms-3 px-4 py-2" style="text-decoration: none;">{{ t['btn_main_menu'] }}</a>
         </div>
     </div>
 
@@ -157,12 +95,15 @@
         <input type="hidden" name="score_data" id="score_data_input">
     </form>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         const quizData = {{ lectie.quiz_questions | tojson }};
+        const lessonId = {{ id_curent }};
+        const storageKey = `quiz_progress_${lessonId}`;
+
         let currentStep = 0;
         let userAnswers = new Array(quizData.length).fill().map(() => []); 
 
-        // TRADUCERE: Pasăm textele din Python în JavaScript
         const TEXTS = {
             multi: "{{ t['js_multi_choice'] }}",
             single: "{{ t['js_single_choice'] }}",
@@ -172,12 +113,38 @@
             correct_msg: "{{ t['js_correct_msg'] }}"
         };
 
+        function saveProgress() {
+            const progress = {
+                step: currentStep,
+                answers: userAnswers
+            };
+            localStorage.setItem(storageKey, JSON.stringify(progress));
+        }
+
+        function loadProgress() {
+            const saved = localStorage.getItem(storageKey);
+            if (saved) {
+                try {
+                    const data = JSON.parse(saved);
+                    if (data.answers && data.answers.length === quizData.length) {
+                        currentStep = data.step || 0;
+                        userAnswers = data.answers;
+                    }
+                } catch (e) {
+                    console.error("Eroare la încărcarea progresului", e);
+                }
+            }
+        }
+
+        function clearProgress() {
+            localStorage.removeItem(storageKey);
+        }
+        
         function loadQuestion(index) {
             document.getElementById('q-number').innerText = index + 1;
             document.getElementById('question-text').innerHTML = quizData[index].intrebare;
             
             const isMulti = quizData[index].corect.length > 1;
-            // Folosim textele traduse
             document.getElementById('instruction-text').innerText = isMulti ? TEXTS.multi : TEXTS.single;
 
             const optionsDiv = document.getElementById('options-area');
@@ -187,7 +154,6 @@
                 const btn = document.createElement('button');
                 btn.className = 'option-btn';
                 btn.innerText = varianta;
-                
                 if (userAnswers[index].includes(varianta)) {
                     btn.classList.add('selected');
                 }
@@ -218,6 +184,7 @@
                 btn.classList.add('selected');
             }
             userAnswers[index] = currentSelections;
+            saveProgress();
         }
 
         function updateNavButtons() {
@@ -235,20 +202,22 @@
 
         function nextQuestion() {
             if (userAnswers[currentStep].length === 0) {
-                alert(TEXTS.alert); // Traducere Alertă
+                alert(TEXTS.alert);
                 return;
             }
             if (currentStep < quizData.length - 1) {
                 currentStep++;
+                saveProgress();
                 loadQuestion(currentStep);
             }
         }
 
         function finishQuiz() {
             if (userAnswers[currentStep].length === 0) {
-                alert(TEXTS.alert); // Traducere Alertă
+                alert(TEXTS.alert);
                 return;
             }
+            clearProgress();
 
             let score = 0;
             const reviewList = document.getElementById('review-list');
@@ -273,7 +242,6 @@
                 card.className = isCorrect ? 'review-card correct' : 'review-card wrong';
                 
                 let html = `<div class="fw-bold mb-2 fs-5">${index + 1}. ${q.intrebare}</div>`;
-                // Traducere texte raport
                 html += `<div class="mb-1"><span class="badge bg-secondary">${TEXTS.yours}</span> ${userAnswers[index].join(', ')}</div>`;
                 
                 if (!isCorrect) {
@@ -315,9 +283,8 @@
                 if (response.ok) console.log("Salvat");
             }).catch(error => console.error("Eroare", error));
         }
-
+        loadProgress();
         loadQuestion(currentStep);
     </script>
-
 </body>
 </html>

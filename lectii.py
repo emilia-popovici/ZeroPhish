@@ -125,7 +125,7 @@ LECTII = {
         "quiz_questions": [
             {
                 "id": 1,
-                "intrebare": "Care este cea mai corectă definiție a phishing-ului?",
+                "intrebare": "Care este cea mai completă definiție a phishing-ului?",
                 "variante": [
                     "Un virus care infectează calculatorul", 
                     "O metodă de manipulare prin care utilizatorii sunt păcăliți să ofere date", 
@@ -1087,6 +1087,566 @@ Dacă nu confirmi în următoarele 30 de minute, contul tău va fi suspendat.”
                     "Analizezi mesajul și link-ul fără să dai click"
                 ],
                 "explicatie": "Verificarea pe un canal alternativ (out-of-band verification) este cea mai sigură metodă."
+            }
+        ]
+    },
+    6: {
+        "titlu": "6. Ce faci dacă ai căzut victimă?",
+        "descriere": "Ghid de supraviețuire: pași concreți de urmat imediat după un incident pentru a limita pagubele.",
+        "subcapitole": [
+            {
+                "titlu": "1. Primele minute: Regula de Aur",
+                "continut": """
+                    <p>Ai dat click? Ai introdus parola? Ai descărcat ceva? Ești panicat?</p>
+                    
+                    <div class="alert alert-danger text-center">
+                        <h4>🛑 OPREȘTE-TE ȘI RESPIRĂ!</h4>
+                        <p>Panica este cel mai mare inamic acum. Hackerii se bazează pe faptul că vei lua decizii pripite.</p>
+                    </div>
+
+                    <p><strong>Pași imediați (în primele 5-10 minute):</strong></p>
+                    <ol>
+                        <li>Închide imediat pagina web sau browser-ul.</li>
+                        <li>Deconectează dispozitivul de la internet (scoate cablul, oprește Wi-Fi/Datele). Asta oprește transmiterea datelor sau descărcarea malware-ului.</li>
+                        <li>Nu mai interacționa cu mesajul (nu răspunde, nu da forward).</li>
+                    </ol>
+                    <p><em>Acum, identifică scenariul în care te afli mai jos.</em></p>
+                """
+            },
+            {
+                "titlu": "2. Scenarii: Click simplu vs. Date de logare",
+                "continut": """
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="card h-100 border-warning">
+                                <div class="card-body">
+                                    <h5 class="card-title">Scenario A: Doar Click</h5>
+                                    <p>Ai accesat link-ul, dar <strong>nu ai introdus date</strong> și ai închis pagina repede.</p>
+                                    <hr>
+                                    <p><strong>Ce faci:</strong></p>
+                                    <ul>
+                                        <li>Riscul este mic/mediu.</li>
+                                        <li>Șterge mesajul.</li>
+                                        <li>Rulează o scanare antivirus (pentru siguranță).</li>
+                                        <li><strong>NU</strong> trimite link-ul altora „să vadă și ei”.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="card h-100 border-danger">
+                                <div class="card-body">
+                                    <h5 class="card-title">Scenario B: Email + Parolă</h5>
+                                    <p>Ai introdus credențialele pe un site fals.</p>
+                                    <hr>
+                                    <p><strong>Ce faci URGENT:</strong></p>
+                                    <ol>
+                                        <li>Schimbă parola contului afectat <strong>imediat</strong>.</li>
+                                        <li>Schimbă parola oriunde ai mai folosit-o (Dacă ai aceeași parolă la Facebook și Yahoo, schimbă-le pe ambele!).</li>
+                                        <li>Verifică sesiuni active (Log out from all devices).</li>
+                                    </ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                """
+            },
+            {
+                "titlu": "3. Scenarii Critice: 2FA și Date Bancare",
+                "continut": """
+                    <div class="alert alert-secondary">
+                        <h5>⚠️ Scenario C: Ai oferit codul 2FA (SMS/App)</h5>
+                        <p>Acesta este un scenariu critic. Hackerul are cheia completă de acces.</p>
+                        <p><strong>Acțiune:</strong> Schimbă parola imediat (asta resetează de obicei sesiunile). Intră în setări la "Dispozitive conectate" și șterge orice dispozitiv necunoscut (ex: un iPhone în China).</p>
+                    </div>
+
+                    <div class="alert alert-danger" style="border: 2px solid red;">
+                        <h5>💸 Scenario D: Ai introdus Datele Bancare</h5>
+                        <p>Timpul se măsoară în secunde.</p>
+                        <ol>
+                            <li><strong>Sună la bancă</strong> imediat (numărul de pe spatele cardului).</li>
+                            <li><strong>Blochează cardul</strong> din aplicația mobilă (dacă ai acces).</li>
+                            <li>Verifică tranzacțiile recente și contestă orice plată neautorizată.</li>
+                            <li>Depune o sesizare la poliție dacă paguba s-a produs.</li>
+                        </ol>
+                    </div>
+                """
+            },
+            {
+                "titlu": "4. Scenario E: Ai descărcat un fișier",
+                "continut": """
+                    <p>Ai dat click și s-a descărcat ceva (un PDF, un ZIP, un EXE), sau ai deschis un atașament.</p>
+                    
+                    <div class="mt-4 p-4 rounded" style="background-color: #fffde7; border: 2px dashed #f6e58d;">
+                        <strong>Procedură:</strong>
+                        <ul>
+                            <li><strong>NU deschide fișierul!</strong></li>
+                            <li>Deconectează-te de la internet (pentru a opri comunicarea virusului cu hackerul).</li>
+                            <li>Șterge fișierul definitiv (Shift + Delete / Golire Coș de gunoi).</li>
+                            <li>Scanează complet sistemul cu un antivirus actualizat.</li>
+                            <li>Dacă ai deschis fișierul, cere ajutorul unui profesionist IT pentru curățare.</li>
+                        </ul>
+                    </div>
+                """
+            },
+            {
+                "titlu": "5. Checklist de Stabilizare (Post-Incident)",
+                "continut": """
+                    <p>După ce a trecut furtuna, asigură-te că ești protejat pe termen lung.</p>
+                    <table class="table table-bordered">
+                        <thead style="background-color: #7E8C69; color: white;">
+                            <tr>
+                                <th>Acțiune</th>
+                                <th>De ce?</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>✅ <strong>Activează 2FA peste tot</strong></td>
+                                <td>Chiar dacă îți fură parola, nu pot intra fără cod.</td>
+                            </tr>
+                            <tr>
+                                <td>✅ <strong>Verifică regulile de Email</strong></td>
+                                <td>Hackerii setează adesea "Forwarding Rules" ca să primească o copie a email-urilor tale. Verifică setările!</td>
+                            </tr>
+                            <tr>
+                                <td>✅ <strong>Monitorizează conturile</strong></td>
+                                <td>Urmărește activitatea în următoarele 30 de zile.</td>
+                            </tr>
+                            <tr>
+                                <td>✅ <strong>Educă-te</strong></td>
+                                <td>Faptul că ești aici e cel mai bun pas. Ai învățat lecția!</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                """
+            }
+        ],
+        "quiz_questions": [
+            {
+                "id": 1,
+                "intrebare": "Ai dat click pe un link de phishing, dar ai închis imediat pagina fără să tastezi nimic. Care este nivelul de risc?",
+                "variante": [
+                    "Critic (cont pierdut)",
+                    "Mic/Mediu (posibil malware, dar datele sunt sigure)",
+                    "Niciun risc",
+                    "Trebuie să îți ștergi contul"
+                ],
+                "corect": ["Mic/Mediu (posibil malware, dar datele sunt sigure)"],
+                "explicatie": "Dacă nu ai introdus date, hackerii nu au parola ta. Riscul principal rămâne o infectare malware, deci o scanare e recomandată."
+            },
+            {
+                "id": 2,
+                "intrebare": "Ai realizat că tocmai ai introdus parola pe un site fals. Ce faci PRIMA DATĂ? (Selectează multiple)",
+                "variante": [
+                    "Schimbi parola contului afectat",
+                    "Aștepți să vezi dacă primești email de la hacker",
+                    "Activezi 2FA (autentificarea în doi pași)",
+                    "Verifici sesiuni active și dai Log Out la toate"
+                ],
+                "corect": [
+                    "Schimbi parola contului afectat",
+                    "Activezi 2FA (autentificarea în doi pași)",
+                    "Verifici sesiuni active și dai Log Out la toate"
+                ],
+                "explicatie": "Nu aștepta! Schimbarea parolei și întreruperea sesiunilor active sunt vitale pentru a scoate hackerul din cont."
+            },
+            {
+                "id": 3,
+                "intrebare": "De ce este extrem de periculos să oferi codul 2FA (primit prin SMS/App) unui 'operator'?",
+                "variante": [
+                    "Nu este periculos, e doar o verificare",
+                    "Codul expiră oricum",
+                    "Hackerul poate trece de protecția parolei și preia controlul total",
+                    "Operatorii au nevoie de cod pentru a te ajuta"
+                ],
+                "corect": ["Hackerul poate trece de protecția parolei și preia controlul total"],
+                "explicatie": "Codul 2FA este ultima linie de apărare. Odată oferit, parola ta nu mai contează."
+            },
+            {
+                "id": 4,
+                "intrebare": "Care scenariu necesită blocarea imediată a cardului bancar?",
+                "variante": [
+                    "Ai dat click pe un link",
+                    "Ai introdus numărul cardului și CVV-ul pe un site suspect",
+                    "Ai primit un email de la bancă",
+                    "Ai descărcat o poză"
+                ],
+                "corect": ["Ai introdus numărul cardului și CVV-ul pe un site suspect"],
+                "explicatie": "Dacă datele financiare au fost expuse, banii pot fi furați instantaneu."
+            },
+            {
+                "id": 5,
+                "intrebare": "Ce trebuie să verifici în setările de email după un incident de securitate?",
+                "variante": [
+                    "Culoarea temei",
+                    "Semnătura",
+                    "Regulile de redirecționare (Forwarding rules)",
+                    "Lista de contacte"
+                ],
+                "corect": ["Regulile de redirecționare (Forwarding rules)"],
+                "explicatie": "Hackerii adaugă adesea reguli ascunse pentru a-și trimite copii ale email-urilor tale, chiar și după ce schimbi parola."
+            }
+        ]
+    },
+    7: {
+        "titlu": "7. Protecția pe termen lung",
+        "descriere": "Securitatea nu este un produs, ci un obicei. Învață despre parole, 2FA și igiena digitală.",
+        "subcapitole": [
+            {
+                "titlu": "1. Securitatea: Produs vs. Obicei",
+                "continut": """
+                    <p>Mulți utilizatori trăiesc cu impresia greșită că „dacă am antivirus, sunt în siguranță”.</p>
+                    <div class="alert alert-warning">
+                        <strong>❌ Fals.</strong> Majoritatea atacurilor de phishing nu exploatează bug-uri în software, ci „bug-uri” în atenția umană (graba, naivitatea, oboseala).
+                    </div>
+                    <p>Securitatea cibernetică este 10% tehnologie și <strong>90% comportament</strong>. Cel mai bun firewall este creierul tău, atunci când îi acorzi timp să analizeze.</p>
+                """
+            },
+            {
+                "titlu": "2. Parolele: Lungime vs. Complexitate",
+                "continut": """
+                    <p>O parolă spartă este adesea cauza principală a furtului de identitate. Cum arată o parolă modernă și sigură?</p>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card border-danger mb-3">
+                                <div class="card-header">❌ Slabă (Tradițională)</div>
+                                <div class="card-body">
+                                    <p class="card-text"><code>Pa$$w0rd1!</code></p>
+                                    <p><small>Deși are caractere speciale, este scurtă și predictibilă pentru roboți.</small></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card border-success mb-3">
+                                <div class="card-header">✅ Puternică (Passphrase)</div>
+                                <div class="card-body">
+                                    <p class="card-text"><code>Cafea!PlouaPisicaPeGeam2026</code></p>
+                                    <p><small>Lungimea (15+ caractere) crește exponențial timpul de spargere. E ușor de ținut minte.</small></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info">
+                        <strong>Sfat:</strong> Nu încerca să ții minte zeci de parole. Folosește un <strong>Password Manager</strong> (Google Password Manager, Bitwarden, 1Password). Este un seif digital criptat.
+                    </div>
+                """
+            },
+            {
+                "titlu": "3. Pericolul refolosirii parolelor",
+                "continut": """
+                    <p>Acesta este „Păcatul Capital” în securitate. Dacă folosești aceeași parolă la Facebook, Email și un forum de pescuit, ești în pericol.</p>
+                    
+                    <div class="p-3 mb-2 bg-light text-dark border rounded">
+                        <h5>🎲 Efectul Domino (Credential Stuffing)</h5>
+                        <ol>
+                            <li>Forumul de pescuit (care are securitate slabă) este spart.</li>
+                            <li>Hackerii iau parola ta de acolo.</li>
+                            <li>Ei testează automat acea parolă pe Gmail, Facebook, PayPal, Amazon.</li>
+                            <li>Dacă parola e aceeași... ai pierdut tot.</li>
+                        </ol>
+                    </div>
+                    <p><strong>Soluția:</strong> Parole UNICE pentru fiecare cont. (Posibil doar cu un Password Manager).</p>
+                """
+            },
+            {
+                "titlu": "4. Autentificarea Multi-Factor (2FA)",
+                "continut": """
+                    <p>Chiar dacă cineva îți fură parola, <strong>2FA (Two-Factor Authentication)</strong> este ușa blindată care îi oprește.</p>
+                    
+                    <table class="table table-bordered">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Metodă</th>
+                                <th>Siguranță</th>
+                                <th>Descriere</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>SMS</strong></td>
+                                <td class="text-warning">Medie</td>
+                                <td>Mai bine decât nimic, dar vulnerabil la interceptare (SIM Swap).</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Aplicație (Auth App)</strong></td>
+                                <td class="text-success">Ridicată ✅</td>
+                                <td>Google Authenticator, Microsoft Auth. Codurile se generează local pe telefonul tău, chiar și offline.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Cheie fizică</strong></td>
+                                <td class="text-primary">Maximă</td>
+                                <td>Un stick USB (ex: YubiKey) pe care trebuie să îl atingi.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                """
+            },
+            {
+                "titlu": "5. Igiena Digitală: Email și Dispozitive",
+                "continut": """
+                    <p>Email-ul este „cheia schelet” a vieții tale digitale. Cine are acces la email, poate reseta parolele la orice alt serviciu.</p>
+                    
+                    <ul class="list-group">
+                        <li class="list-group-item">🔍 <strong>Verifică regulile de Forwarding:</strong> Hackerii setează adesea reguli ca să primească o copie a email-urilor tale.</li>
+                        <li class="list-group-item">📱 <strong>Update-uri software:</strong> Nu amâna actualizările la telefon/laptop. Ele repară găuri de securitate pe care hackerii le exploatează.</li>
+                        <li class="list-group-item">☕ <strong>Wi-Fi Public:</strong> Evită să te loghezi în conturi bancare de pe Wi-Fi-ul cafenelei fără un VPN.</li>
+                    </ul>
+                """
+            }
+        ],
+        "quiz_questions": [
+            {
+                "id": 1,
+                "intrebare": "Care este, statistic, cel mai important factor în securitatea personală?",
+                "variante": [
+                    "Cât de scump este antivirusul",
+                    "Comportamentul utilizatorului (atenția)",
+                    "Viteza internetului",
+                    "Brandul telefonului"
+                ],
+                "corect": ["Comportamentul utilizatorului (atenția)"],
+                "explicatie": "Tehnologia te ajută, dar decizia finală de a da click sau a introduce date îți aparține."
+            },
+            {
+                "id": 2,
+                "intrebare": "Ce face o parolă să fie puternică? (Selectează multiple)",
+                "variante": [
+                    "Să fie cât mai scurtă",
+                    "Lungimea mare (12-15+ caractere)",
+                    "Unicitatea (să nu fie refolosită)",
+                    "Complexitatea (litere, cifre, simboluri)"
+                ],
+                "corect": [
+                    "Lungimea mare (12-15+ caractere)",
+                    "Unicitatea (să nu fie refolosită)",
+                    "Complexitatea (litere, cifre, simboluri)"
+                ],
+                "explicatie": "Lungimea este matematic cel mai important factor împotriva spargerii prin forță brută."
+            },
+            {
+                "id": 3,
+                "intrebare": "De ce este periculoasă refolosirea parolelor?",
+                "variante": [
+                    "Ocupă multă memorie",
+                    "Dacă un site este spart, hackerii încearcă acea parolă pe toate celelalte conturi (efect domino)",
+                    "Nu este periculoasă, este eficientă",
+                    "Parolele expiră mai repede"
+                ],
+                "corect": ["Dacă un site este spart, hackerii încearcă acea parolă pe toate celelalte conturi (efect domino)"],
+                "explicatie": "Credential Stuffing este metoda prin care hackerii folosesc parole scurse din baze de date vechi pentru a intra în conturi active."
+            },
+            {
+                "id": 4,
+                "intrebare": "Care este metoda recomandată de Autentificare în Doi Pași (2FA)?",
+                "variante": [
+                    "Doar parola simplă",
+                    "SMS (datorită riscului de SIM Swap)",
+                    "Aplicație de autentificare (ex: Google Authenticator)",
+                    "Email"
+                ],
+                "corect": ["Aplicație de autentificare (ex: Google Authenticator)"],
+                "explicatie": "Aplicațiile generează coduri local pe dispozitiv, fiind mult mai sigure decât SMS-urile care pot fi interceptate."
+            },
+            {
+                "id": 5,
+                "intrebare": "Ce trebuie să verifici periodic la contul de email?",
+                "variante": [
+                    "Dacă ai primit spam",
+                    "Culoarea temei",
+                    "Regulile de redirecționare (Forward rules) și dispozitivele conectate",
+                    "Numărul de contacte"
+                ],
+                "corect": ["Regulile de redirecționare (Forward rules) și dispozitivele conectate"],
+                "explicatie": "Hackerii lasă adesea „portițe” (backdoors) prin reguli de forward pentru a spiona contul chiar și după ce schimbi parola."
+            }
+        ]
+    },
+    8: {
+        "titlu": "8. Simulare și Test Final",
+        "descriere": "Capstone-ul cursului: o simulare de atac și evaluarea finală a vigilenței tale.",
+        "subcapitole": [
+            {
+                "titlu": "1. Ce este o simulare de phishing?",
+                "continut": """
+                    <p>Ai ajuns la final. Acum trecem de la teorie la practică. O simulare de phishing este un <strong>„exercițiu de incendiu”</strong> digital.</p>
+                    
+                    <div class="alert alert-info">
+                        <strong>🎯 Scopul:</strong> Imităm un atac real într-un mediu sigur, controlat, pentru a vedea cum reacționezi sub presiune.
+                    </div>
+
+                    <p>În viața reală, greșeala costă bani sau date. Aici, greșeala costă doar puncte. Urmează să analizezi un scenariu des întâlnit.</p>
+                """
+            },
+            {
+                "titlu": "2. SCENARIU PRACTIC: Analizează acest mesaj",
+                "continut": """
+                    <p>Imaginează-ți că primești următorul email luni dimineața. Privește-l cu atenție:</p>
+
+                    <div class="card shadow-sm mb-4" style="border: 2px dashed #d9534f; background-color: #fff;">
+                        <div class="card-header bg-light">
+                            <strong>De la:</strong> Securitate Bancară &lt;alert@banca-transilvania-support.net&gt;<br>
+                            <strong>Subiect:</strong> ⚠️ ACȚIUNE NECESARĂ: Contul tău a fost suspendat
+                        </div>
+                        <div class="card-body">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Link_icon.svg/1200px-Link_icon.svg.png" width="30" style="float:right; opacity:0.5;">
+                            <p>Stimate client,</p>
+                            <p>Am detectat o activitate neobișnuită (conectare din Rusia) pe contul dumneavoastră.</p>
+                            <p>Din motive de securitate, am blocat temporar cardurile. Pentru a debloca accesul, vă rugăm să confirmați identitatea în maxim 24 de ore.</p>
+                            
+                            <div class="text-center my-3">
+                                <a href="#" class="btn btn-primary disabled" style="pointer-events: none;">Verifică Identitatea Acum</a>
+                            </div>
+                            
+                            <p><small>Dacă nu acționați, contul va fi închis permanent.<br>Echipa de Securitate.</small></p>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-warning">
+                        <strong>🤔 Ce faci în această situație?</strong>
+                        <ul>
+                            <li><strong>Opțiunea A:</strong> Dai click rapid, de frică să nu pierzi banii.</li>
+                            <li><strong>Opțiunea B:</strong> Te uiți la adresa de email (<em>...support.net</em>? Banca are <em>.ro</em>).</li>
+                            <li><strong>Opțiunea C:</strong> Observi urgența artificială („închis permanent”).</li>
+                        </ul>
+                    </div>
+                """
+            },
+            {
+                "titlu": "3. Analiza Scenariului (Debriefing)",
+                "continut": """
+                    <p>Dacă ai fi dat click pe link-ul de mai sus într-un scenariu real, hackerii te-ar fi dus pe o pagină identică cu cea a băncii.</p>
+                    
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Element Suspect (Red Flag)</th>
+                                <th>Explicație</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>🔴 <strong>Expeditorul</strong></td>
+                                <td>Domeniul <code>banca-transilvania-support.net</code> este FALS. O bancă folosește domeniul oficial.</td>
+                            </tr>
+                            <tr>
+                                <td>🔴 <strong>Salutul</strong></td>
+                                <td>„Stimate client” este generic. Băncile îți știu numele.</td>
+                            </tr>
+                            <tr>
+                                <td>🔴 <strong>Amenințarea</strong></td>
+                                <td>„Contul va fi închis permanent”. Nicio bancă nu închide contul prin email.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                """
+            },
+            {
+                "titlu": "4. Nivelurile de Risc Comportamental",
+                "continut": """
+                    <p>În funcție de reacția ta la astfel de mesaje, te încadrezi într-o categorie de risc:</p>
+
+                    <div class="row text-center">
+                        <div class="col-md-4">
+                            <div class="p-3 mb-2 bg-danger text-white rounded">
+                                <h5>🟥 Risc Ridicat</h5>
+                                <p>Dai click imediat. Introduci date fără verificare. Ești victima ideală.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="p-3 mb-2 bg-warning text-dark rounded">
+                                <h5>🟨 Risc Mediu</h5>
+                                <p>Eziți, verifici parțial, dar tot dai click „de curiozitate”. Ești vulnerabil la atacuri sofisticate.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="p-3 mb-2 bg-success text-white rounded">
+                                <h5>🟩 Risc Scăzut</h5>
+                                <p>Verifici sursa (header), nu dai click, raportezi email-ul sau suni la bancă. Ești protejat.</p>
+                            </div>
+                        </div>
+                    </div>
+                """
+            }
+        ],
+        "quiz_questions": [
+            {
+                "id": 1,
+                "intrebare": "Care este scopul principal al unui atac de phishing?",
+                "variante": [
+                    "Să îți strice calculatorul (hardware)",
+                    "Furtul de date sensibile (parole, carduri) prin manipulare",
+                    "Să îți facă reclamă la produse",
+                    "Testarea vitezei de internet"
+                ],
+                "corect": ["Furtul de date sensibile (parole, carduri) prin manipulare"],
+                "explicatie": "Phishing-ul vizează informația, nu distrugerea echipamentului."
+            },
+            {
+                "id": 2,
+                "intrebare": "Ce elemente (Red Flags) indică un mesaj fals? (Selectează multiple)",
+                "variante": [
+                    "Adresa de email ciudată / neoficială",
+                    "Tonul urgent și amenințător",
+                    "Greșeli gramaticale evidente",
+                    "Link-uri către site-ul oficial (https://google.com)"
+                ],
+                "corect": [
+                    "Adresa de email ciudată / neoficială",
+                    "Tonul urgent și amenințător",
+                    "Greșeli gramaticale evidente"
+                ],
+                "explicatie": "Urgența, greșelile și expeditorul dubios sunt cele mai clare semne."
+            },
+            {
+                "id": 3,
+                "intrebare": "Ce NU va cere niciodată o companie legitimă prin email/SMS?",
+                "variante": [
+                    "Să evaluezi serviciul",
+                    "Parola contului tău",
+                    "Să citești o notificare în aplicație",
+                    "Confirmarea adresei de livrare (fără link de login)"
+                ],
+                "corect": ["Parola contului tău"],
+                "explicatie": "Parola este sacră. Niciun angajat (IT, Bancă, Poliție) nu are dreptul să ți-o ceară."
+            },
+            {
+                "id": 4,
+                "intrebare": "Care este cea mai bună protecție pe termen lung împotriva phishing-ului?",
+                "variante": [
+                    "Instalarea a 5 antivirusuri",
+                    "Educația utilizatorului și vigilența (Scepticismul)",
+                    "Să nu folosești internetul",
+                    "Să schimbi calculatorul lunar"
+                ],
+                "corect": ["Educația utilizatorului și vigilența (Scepticismul)"],
+                "explicatie": "Tehnologia poate da greș, dar un utilizator educat va recunoaște tentativa de fraudă."
+            },
+            {
+                "id": 5,
+                "intrebare": "Ce faci dacă primești un email suspect de la „Netflix” despre o plată eșuată?",
+                "variante": [
+                    "Dai click pe link să rezolvi repede",
+                    "Răspunzi la email cu datele cardului",
+                    "Nu dai click. Intri manual pe Netflix.com (scrii tu adresa) și verifici acolo.",
+                    "Ștergi contul Netflix"
+                ],
+                "corect": ["Nu dai click. Intri manual pe Netflix.com (scrii tu adresa) și verifici acolo."],
+                "explicatie": "Verificarea prin canal alternativ (scrierea adresei manual) este metoda sigură de a evita capcanele."
+            },
+            {
+                "id": 6,
+                "intrebare": "Analiză link: Care dintre următoarele este sigur pentru PayPal?",
+                "variante": [
+                    "http://paypal-secure-login.com",
+                    "https://www.paypal.com",
+                    "http://paypal.verify-account.net",
+                    "https://pay-pal.com"
+                ],
+                "corect": ["https://www.paypal.com"],
+                "explicatie": "Doar domeniul exact 'paypal.com' este legitim. Orice adăugire cu cratimă sau altă terminație (.net, -secure) este phishing."
             }
         ]
     }
