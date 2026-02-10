@@ -118,6 +118,7 @@ TEXTE = {
         """,
         'err_username_short': 'Numele de utilizator trebuie să aibă minim 3 caractere!',
         'err_password_complex': 'Parola trebuie să aibă minim 8 caractere, o cifră și un caracter special (@$!%*?&).',
+        'err_complete_previous': 'Trebuie să finalizezi quiz-ul lecției anterioare pentru a debloca această lecție!',
     },
 
     'en': {
@@ -239,6 +240,7 @@ TEXTE = {
         """,
         'err_username_short': 'Username must be at least 3 characters long!',
         'err_password_complex': 'Password must be at least 8 characters long, contain a digit and a special character (@$!%*?&).',
+        'err_complete_previous': 'You must complete the previous lesson\'s quiz to unlock this lesson!',
     },
 
     'fr': {
@@ -360,6 +362,7 @@ TEXTE = {
         """,
         'err_username_short': 'Le nom d\'utilisateur doit comporter au moins 3 caractères !',
         'err_password_complex': 'Le mot de passe doit comporter au moins 8 caractères, contenir un chiffre et un caractère spécial (@$!%*?&).',
+        'err_complete_previous': 'Vous devez compléter le quiz de la leçon précédente pour débloquer cette leçon !',
     },
 
     'ru': {
@@ -481,5 +484,6 @@ TEXTE = {
         """,
         'err_username_short': 'Имя пользователя должно быть не менее 3 символов!',
         'err_password_complex': 'Пароль должен быть не менее 8 символов, содержать цифру и специальный символ (@$!%*?&).',
+        'err_complete_previous': 'Вы должны пройти викторину предыдущего урока, чтобы разблокировать этот урок!',
     }
 }

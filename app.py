@@ -234,6 +234,16 @@ def view_lesson(id_lectie):
     t = TEXTE.get(lang, TEXTE['ro'])
     
     if not lectie: return t['err_lesson_not_found'], 404
+
+    if id_lectie > 1:
+        scor_anterior = LessonProgress.query.filter_by(
+            user_id=current_user.id,
+            lesson_id= id_lectie -1
+        ).first()
+
+        if not scor_anterior:
+            flash(t['err_complete_previous'], 'warning')
+            return redirect (url_for('home'))
     return render_template('lesson.html', lectie=lectie, id_curent=id_lectie)
 
 @app.route('/quiz/<int:id_lectie>', methods=['GET', 'POST'])

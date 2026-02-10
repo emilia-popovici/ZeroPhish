@@ -380,6 +380,10 @@ img { max-width: 100%; height: auto; border-radius: 12px; }
 .auth-card .text-center.mt-4 a:hover { color: var(--soft-green) !important; text-decoration: underline !important; }
 .auth-card .text-center.mt-4 {padding-top: 25px !important;margin-top: 25px !important;}
 
+.card.locked { opacity: 0.6; filter: grayscale(0.5); pointer-events: none; cursor: not-allowed; position:relative;}
+.card.locked::before { content: '🔒'; position: absolute; top: 15px; right: 15px; font-size: 1.5rem; z-index: 10;}
+.card.locked .btn-outline-primary { background-color: var(--disabled-gray) !important; border-color: var(--disabled-gray) !important; color: white !important;}
+
 @media (max-width: 768px) {
     .hero-section {
         padding: 50px 10px 100px 10px;
@@ -430,12 +434,37 @@ img { max-width: 100%; height: auto; border-radius: 12px; }
         align-self: flex-end;
     }
     .lesson-container, .quiz-container {
-        padding: 30px 20px;
+        padding: 30px 15px;
         margin-top: 20px;
         width: 95%;
     }
     .lesson-container h1 { font-size: 1.8rem; }
     .option-btn { padding: 15px; font-size: 1rem; }
+
+    .review-card {
+        padding: 15px;
+        word-wrap: break-word;
+    }
+
+    .review-card strong, .review-card span {
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    .quiz-container .d-flex {
+        flex-direction: column !important;
+        gap: 12px !important;
+    }
+
+    .quiz-container .btn-success, 
+    .quiz-container .btn-outline-secondary,
+    .quiz-container .back-link {
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 12px !important;
+        display: block;
+        text-align: center;
+    }
 }
 
 @media (min-width: 769px) and (max-width: 1024px) {

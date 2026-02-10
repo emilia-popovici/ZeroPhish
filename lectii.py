@@ -832,16 +832,14 @@ LECTII = {
                 "id": 9,
                "intrebare": """Analizează mesajul de mai jos și selectează TOATE elementele care reprezintă un semnal de alarmă:
 
-------------------------------------------------
-De la: Suport Cont <support@secure-account-verify.com>
+                De la: Suport Cont <support@secure-account-verify.com>
 
-„Am detectat activitate neobișnuită în contul tău.
-Pentru a evita suspendarea, confirmă datele imediat accesând link-ul de mai jos:
+                „Am detectat activitate neobișnuită în contul tău.
+                Pentru a evita suspendarea, confirmă datele imediat accesând link-ul de mai jos:
 
-👉 https://account-verify-secure.info/login
+                👉 https://account-verify-secure.info/login
 
-Dacă nu confirmi în următoarele 30 de minute, contul tău va fi suspendat.”
-------------------------------------------------""",
+                Dacă nu confirmi în următoarele 30 de minute, contul tău va fi suspendat.”""",
                 "variante": [
                     "Expeditorul (domeniu generic/neoficial)",
                     "Link-ul (URL necunoscut)",

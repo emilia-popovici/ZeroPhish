@@ -727,7 +727,6 @@ LECTII_ALL = {   'en': {   1: {   'descriere': 'Definitions, the psychology behi
                                                'intrebare': 'Analyze the message below and select ALL the items that '
                                                             'represent an alarm signal:\n'
                                                             '\n'
-                                                            '-----------------------------------------------------\n'
                                                             'From: Account Support '
                                                             '<support@secure-account-verify.com>\n'
                                                             '\n'
@@ -738,8 +737,7 @@ LECTII_ALL = {   'en': {   1: {   'descriere': 'Definitions, the psychology behi
                                                             '👉 https://account-verify-secure.info/login\n'
                                                             '\n'
                                                             'If you do not confirm within the next 30 minutes, your '
-                                                            'account will be suspended."\n'
-                                                            '-----------------------------------------------------',
+                                                            'account will be suspended."\n',
                                                'variante': [   'Sender (generic/unofficial domain)',
                                                                'The link (unknown URL)',
                                                                'Tone (threat and time pressure)',
@@ -2525,7 +2523,6 @@ LECTII_ALL = {   'en': {   1: {   'descriere': 'Definitions, the psychology behi
                                                'intrebare': 'Analysez le message ci-dessous et sélectionnez TOUS les '
                                                             "éléments qui représentent un signal d'alarme\xa0:\n"
                                                             '\n'
-                                                            '--------------------------------------------------------------------\n'
                                                             'De\xa0: Support de compte '
                                                             '<support@secure-account-verify.com>\n'
                                                             '\n'
@@ -2537,8 +2534,7 @@ LECTII_ALL = {   'en': {   1: {   'descriere': 'Definitions, the psychology behi
                                                             '👉 https://account-verify-secure.info/login\n'
                                                             '\n'
                                                             'Si vous ne confirmez pas dans les 30 prochaines minutes, '
-                                                            'votre compte sera suspendu."\n'
-                                                            '--------------------------------------------------------------------',
+                                                            'votre compte sera suspendu."\n',
                                                'variante': [   'Expéditeur (domaine générique/non officiel)',
                                                                'Le lien (URL inconnue)',
                                                                'Tonalité (menace et pression du temps)',
@@ -4398,7 +4394,6 @@ LECTII_ALL = {   'en': {   1: {   'descriere': 'Definitions, the psychology behi
                                                'intrebare': 'Analizează mesajul de mai jos și selectează TOATE '
                                                             'elementele care reprezintă un semnal de alarmă:\n'
                                                             '\n'
-                                                            '------------------------------------------------\n'
                                                             'De la: Suport Cont <support@secure-account-verify.com>\n'
                                                             '\n'
                                                             '„Am detectat activitate neobișnuită în contul tău.\n'
@@ -4408,8 +4403,7 @@ LECTII_ALL = {   'en': {   1: {   'descriere': 'Definitions, the psychology behi
                                                             '👉 https://account-verify-secure.info/login\n'
                                                             '\n'
                                                             'Dacă nu confirmi în următoarele 30 de minute, contul tău '
-                                                            'va fi suspendat.”\n'
-                                                            '------------------------------------------------',
+                                                            'va fi suspendat.”\n',
                                                'variante': [   'Expeditorul (domeniu generic/neoficial)',
                                                                'Link-ul (URL necunoscut)',
                                                                'Tonul (amenințare și presiune de timp)',
@@ -6233,7 +6227,6 @@ LECTII_ALL = {   'en': {   1: {   'descriere': 'Definitions, the psychology behi
                                                'intrebare': 'Проанализируйте сообщение ниже и выберите ВСЕ элементы, '
                                                             'которые представляют собой сигнал тревоги:\n'
                                                             '\n'
-                                                            '-----------------------------------------------------\n'
                                                             'От: Служба поддержки учетных записей '
                                                             '<support@secure-account-verify.com>\n'
                                                             '\n'
@@ -6244,8 +6237,7 @@ LECTII_ALL = {   'en': {   1: {   'descriere': 'Definitions, the psychology behi
                                                             '👉 https://account-verify-secure.info/login\n'
                                                             '\n'
                                                             'Если вы не подтвердите это в течение следующих 30 минут, '
-                                                            'ваша учетная запись будет заблокирована».\n'
-                                                            '-----------------------------------------------------',
+                                                            'ваша учетная запись будет заблокирована».\n',
                                                'variante': [   'Отправитель (общий/неофициальный домен)',
                                                                'Ссылка (неизвестный URL)',
                                                                'Тон (угроза и нехватка времени)',
