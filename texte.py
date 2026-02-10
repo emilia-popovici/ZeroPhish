@@ -147,7 +147,29 @@ TEXTE = {
         'screenshot': 'Screenshot',
         'send_rep': 'Trimite raportul',
         'comm_subtitle': 'Analizează și raportează tentativele reale de phishing.',
-        'btn_locked': 'Lecție blocată'
+        'btn_locked': 'Lecție blocată',
+        'email_reset_subject': 'Resetare Parolă - ZeroPhish',
+        'email_reset_html': """
+            <p>Bună <strong>@{user}</strong>,</p>
+            <p>Am primit o cerere de resetare a parolei pentru contul tău.</p>
+            <p>Pentru a seta o parolă nouă, te rog <a href="{link}" style="color: #7E8C69; font-weight: bold; text-decoration: none;">apasă aici</a>.</p>
+            <br>
+            <p><small>Dacă nu ai cerut acest lucru, ignoră acest mesaj. Link-ul expiră în 30 de minute.</small></p>
+            <p>Toate cele bune,<br>ZeroPhish</p>
+            """,
+        'msg_reset_email_sent': 'Un email cu instrucțiuni a fost trimis.',
+        'err_email_not_found': 'Nu există un cont cu acest email.',
+        'err_reset_link_invalid': 'Link-ul este invalid sau a expirat.',
+        'err_pass_mismatch': 'Parolele nu coincid!',
+        'msg_pass_updated': 'Parola a fost actualizată! Te poți loga acum.',
+        'title_reset_request': 'Resetare Parolă',
+        'desc_reset_request': 'Introdu adresa de email asociată contului tău pentru a primi link-ul de resetare.',
+        'lbl_email': 'Adresă Email',
+        'btn_send_link': 'Trimite Link Resetare',
+        'link_back_login': 'Înapoi la Autentificare',
+        'title_reset_token': 'Setează Parolă Nouă',
+        'lbl_confirm_password': 'Confirmă Parola',
+        'btn_change_password': 'Schimbă Parola',
     },
 
     'en': {
@@ -298,7 +320,28 @@ TEXTE = {
         'screenshot': 'Screenshot',
         'send_rep': 'Submit Report',
         'comm_subtitle': 'Analyze and report real phishing attempts.',
-        'btn_locked': 'Lesson Locked'
+        'btn_locked': 'Lesson Locked',
+        'email_reset_subject': 'Password Reset - ZeroPhish',
+        'email_reset_body': """Hello <strong>@{user}</strong>,</p>
+        <p>We received a request to reset the password for your account.</p>
+        <p>To set a new password, please <a href="{link}" style="color: #7E8C69; font-weight: bold; text-decoration: none;">click here</a>.</p>
+        <br>
+        <p><small>If you didn't request this, please ignore this message. The link expires in 30 minutes.</small></p>
+        <p>Best regards,<br>ZeroPhish/p>
+        """,
+        'msg_reset_email_sent': 'An email with instructions has been sent.',
+        'err_email_not_found': 'No account found with this email.',
+        'err_reset_link_invalid': 'The link is invalid or has expired.',
+        'err_pass_mismatch': 'Passwords do not match!',
+        'msg_pass_updated': 'Password has been updated! You can now log in.',
+        'title_reset_request': 'Reset Password',
+        'desc_reset_request': 'Enter the email address associated with your account to receive the reset link.',
+        'lbl_email': 'Email Address',
+        'btn_send_link': 'Send Reset Link',
+        'link_back_login': 'Back to Login',
+        'title_reset_token': 'Set New Password',
+        'lbl_confirm_password': 'Confirm Password',
+        'btn_change_password': 'Change Password',
     },
 
     'fr': {
@@ -449,7 +492,28 @@ TEXTE = {
         'screenshot': 'Capture d\'écran',
         'send_rep': 'Soumettre le rapport',
         'comm_subtitle': 'Analysez et signalez les tentatives de phishing réelles.',
-        'btn_locked': 'Leçon verrouillée'
+        'btn_locked': 'Leçon verrouillée',
+        'email_reset_subject': 'Réinitialisation du mot de passe - ZeroPhish',
+        'email_reset_body': """Bonjour <strong>@{user}</strong>,</p>
+        <p>Nous avons reçu une demande de réinitialisation du mot de passe pour votre compte.</p>
+        <p>Pour définir un nouveau mot de passe, veuillez <a href="{link}" style="color: #7E8C69; font-weight: bold; text-decoration: none;">cliquer ici</a>.</p>
+        <br>
+        <p><small>Si vous n'avez pas demandé cela, veuillez ignorer ce message. Le lien expire dans 30 minutes.</small></p>
+        <p>Cordialement,<br>ZeroPhish</p>
+        """,
+        'msg_reset_email_sent': 'Un e-mail avec les instructions a été envoyé.',
+        'err_email_not_found': 'Aucun compte trouvé avec cet e-mail.',
+        'err_reset_link_invalid': 'Le lien est invalide ou a expiré.',
+        'err_pass_mismatch': 'Les mots de passe ne correspondent pas !',
+        'msg_pass_updated': 'Le mot de passe a été mis à jour ! Vous pouvez maintenant vous connecter.',
+        'title_reset_request': 'Réinitialiser le mot de passe',
+        'desc_reset_request': 'Entrez l\'adresse e-mail associée à votre compte pour recevoir le lien de réinitialisation.',
+        'lbl_email': 'Adresse e-mail',
+        'btn_send_link': 'Envoyer le lien de réinitialisation',
+        'link_back_login': 'Retour à la connexion',
+        'title_reset_token': 'Définir un nouveau mot de passe',
+        'lbl_confirm_password': 'Confirmer le mot de passe',
+        'btn_change_password': 'Changer le mot de passe',
     },
 
     'ru': {
@@ -600,6 +664,27 @@ TEXTE = {
         'screenshot': 'Скриншот',
         'send_rep': 'Отправить отчет',
         'comm_subtitle': 'Анализируйте и сообщайте о реальных попытках фишинга.',
-        'btn_locked': 'Урок заблокирован'
+        'btn_locked': 'Урок заблокирован',
+        'email_reset_subject': 'Сброс пароля - ZeroPhish',
+        'email_reset_body': """Здравствуйте <strong>@{user}</strong>,</p>
+        <p>Мы получили запрос на сброс пароля для вашей учетной записи.</p>
+        <p>Чтобы установить новый пароль, пожалуйста, <a href="{link}" style="color: #7E8C69; font-weight: bold; text-decoration: none;">нажмите здесь</a>.</p>
+        <br>
+        <p><small>Если вы не запрашивали это, пожалуйста, проигнорируйте это сообщение. Ссылка истекает через 30 минут.</small></p>
+        <p>С наилучшими пожеланиями,<br>ZeroPhish</p>
+        """,
+        'msg_reset_email_sent': 'Письмо с инструкциями было отправлено.',
+        'err_email_not_found': 'Аккаунт с таким email не найден.',
+        'err_reset_link_invalid': 'Ссылка недействительна или истекла.',
+        'err_pass_mismatch': 'Пароли не совпадают!',
+        'msg_pass_updated': 'Пароль обновлен! Теперь вы можете войти.',
+        'title_reset_request': 'Сброс пароля',
+        'desc_reset_request': 'Введите адрес электронной почты, связанный с вашей учетной записью, чтобы получить ссылку для сброса.',
+        'lbl_email': 'Адрес электронной почты',
+        'btn_send_link': 'Отправить ссылку для сброса',
+        'link_back_login': 'Назад к входу',
+        'title_reset_token': 'Установить новый пароль',
+        'lbl_confirm_password': 'Подтвердите пароль',
+        'btn_change_password': 'Изменить пароль',
     }
 }

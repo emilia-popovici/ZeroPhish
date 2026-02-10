@@ -109,11 +109,9 @@
             {% for id, lectie in lectii.items() %}
             
             {% set proc = progress_map.get(id, 0) %}
-            {# O lecție este deblocată dacă e prima SAU dacă cea anterioară (id-1) a fost terminată #}
             {% set is_unlocked = (id == 1) or ((id - 1) in progress_map) %}
 
             <div class="col-md-6 col-lg-4">
-                {# Adăugăm clasa 'locked' dacă lecția nu este deblocată #}
                 <div class="card h-100 {% if not is_unlocked %}locked{% endif %}">
                     <div class="card-body d-flex flex-column">
                         <div class="icon-box">
@@ -144,9 +142,8 @@
                             {% if is_unlocked %}
                                 <a href="/lectie/{{ id }}" class="btn btn-outline-primary">{{ t['btn_start'] }}</a>
                             {% else %}
-                                {# Buton inactiv pentru lecțiile blocate #}
                                 <button class="btn btn-outline-secondary w-100 disabled" style="opacity: 0.5;">
-                                    {{ t['btn_locked'] or 'Blocat' }}
+                                    {{ t['btn_locked'] }}
                                 </button>
                             {% endif %}
                         </div>

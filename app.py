@@ -25,7 +25,9 @@ app.config['MAIL_PASSWORD'] = 'gabgmdhgetulcqee'
 mail = Mail(app)
 serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
 
-UPLOAD_FOLDER = 'static/uploads'
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+UPLOAD_FOLDER = os.path.join(BASE_DIR, 'static', 'uploads')
+#UPLOAD_FOLDER='static/uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
@@ -373,6 +375,72 @@ def leaderboard():
             data.append({'username': u.username, 'avatar': u.avatar, 'media': int(media), 'lessons_count': len(prog)})
     data = sorted(data, key=lambda x: x['media'], reverse=True)[:10]
     return render_template('leaderboard.html', top_users=data, user=current_user, t=t)
+
+def send_reset_email(user):
+    lang = session.get('lang', 'ro')
+    t = TEXTE.get(lang, TEXTE['ro'])
+
+    token = serializer.dumps(user.email, salt='password-reset-salt')
+    link = url_for('reset_token', token=token, _external=True)
+    
+    msg = Message(t['email_reset_subject'],
+                  sender=app.config['MAIL_USERNAME'],
+                  recipients=[user.email])
+    
+    msg.html = t['email_reset_html'].format(user=user.username, link=link)
+    
+    mail.send(msg)
+
+@app.route("/reset_password", methods=['GET', 'POST'])
+def reset_request():
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
+    
+    lang = session.get('lang', 'ro')
+    t = TEXTE.get(lang, TEXTE['ro'])
+    
+    if request.method == 'POST':
+        email = request.form.get('email')
+        user = User.query.filter_by(email=email).first()
+        if user:
+            send_reset_email(user)
+            flash(t['msg_reset_email_sent'], 'info')
+            return redirect(url_for('login'))
+        else:
+            flash(t['err_email_not_found'], 'warning')
+            
+    return render_template('reset_request.html', t=t)
+
+@app.route("/reset_password/<token>", methods=['GET', 'POST'])
+def reset_token(token):
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
+    
+    lang = session.get('lang', 'ro')
+    t = TEXTE.get(lang, TEXTE['ro'])
+    
+    try:
+        email = serializer.loads(token, salt='password-reset-salt', max_age=1800)
+    except:
+        flash(t['err_reset_link_invalid'], 'danger')
+        return redirect(url_for('reset_request'))
+    
+    user = User.query.filter_by(email=email).first()
+    
+    if request.method == 'POST':
+        password = request.form.get('password')
+        confirm_password = request.form.get('confirm_password')
+        
+        if password != confirm_password:
+            flash(t['err_pass_mismatch'], 'danger')
+        else:
+            hashed_pw = generate_password_hash(password, method='pbkdf2:sha256')
+            user.password = hashed_pw
+            db.session.commit()
+            flash(t['msg_pass_updated'], 'success')
+            return redirect(url_for('login'))
+            
+    return render_template('reset_token.html', t=t)
 
 if __name__ == '__main__':
     with app.app_context():
