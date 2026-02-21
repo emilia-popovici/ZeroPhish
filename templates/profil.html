@@ -17,7 +17,7 @@
 </head>
 <body>
 
-    <div class="top-actions">
+    <div class="top-right-wrapper">
         <div class="notif-container" id="notifContainer">
             <button class="notif-btn" onclick="toggleNotifs()">
                 <i class="bi bi-bell-fill"></i>
@@ -51,12 +51,12 @@
             </div>
         </div>
 
-        <button class="profil-corner-new" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight">
+        <button class="profil-corner" type="button" data-bs-toggle="offcanvas" data-bs-target="#sideMenu">
             <div class="profil-badge">
                 {% if user.avatar %}
-                    <img src="{{ url_for('static', filename='uploads/' + user.avatar) }}" alt="Avatar">
+                    <img src="{{ url_for('static', filename='uploads/' + user.avatar) }}">
                 {% else %}
-                    {{ user.username[0]|upper }}
+                    {{ user.username[0] | upper }}
                 {% endif %}
             </div>
         </button>

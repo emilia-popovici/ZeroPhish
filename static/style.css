@@ -45,16 +45,26 @@ a { text-decoration: none; }
     text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
 }
 
-.profil-corner {
+.top-right-wrapper {
     position: absolute;
     top: 20px;
     right: 20px;
-    z-index: 1000;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    z-index: 1050;
+}
+
+.profil-corner {
     cursor: pointer;
     border: none;
     background: none;
     padding: 0;
     transition: transform 0.2s;
+}
+.top-right-wrapper .profil-corner {
+    position: static;
+    margin: 0;
 }
 .profil-corner:hover { transform: scale(1.1); }
 
@@ -69,6 +79,50 @@ a { text-decoration: none; }
     overflow: hidden;
 }
 .profil-badge img { width: 100%; height: 100%; object-fit: cover; }
+
+.notif-container { position: relative; }
+
+.notif-btn {
+    background: white; border: none; width: 45px; height: 45px; border-radius: 50%;
+    color: var(--dark-green); font-size: 1.3rem; display: flex; align-items: center;
+    justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); cursor: pointer;
+    transition: transform 0.2s;
+}
+.notif-btn:hover { transform: scale(1.1); }
+
+.notif-badge {
+    position: absolute; top: -2px; right: -2px; background-color: #d63031; color: white;
+    font-size: 0.7rem; font-weight: bold; width: 20px; height: 20px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; border: 2px solid white;
+}
+
+.notif-dropdown {
+    display: none; position: absolute; top: 60px; right: 0; background: white;
+    width: 300px; border-radius: 15px; box-shadow: 0 10px 30px rgba(126, 140, 105, 0.2);
+    overflow: hidden; z-index: 1001; border: 1px solid #f0f0f0; text-align: left;
+}
+.notif-dropdown.show { display: block; animation: fadeInDown 0.2s ease; }
+
+.notif-header {
+    padding: 15px; background: #f9fbf7; border-bottom: 1px solid #f0f0f0;
+    color: var(--dark-green); font-size: 1.1rem;
+}
+
+.notif-body { max-height: 350px; overflow-y: auto; }
+.notif-empty { padding: 20px; text-align: center; color: #999; font-size: 0.9rem; }
+
+.notif-item {
+    display: block; padding: 12px 15px; text-decoration: none; color: var(--text-color);
+    border-bottom: 1px solid #f9f9f9; font-size: 0.9rem; transition: background 0.2s; line-height: 1.4;
+}
+.notif-item:hover { background: #f9fbf7; color: var(--dark-green); }
+.notif-item.unread { background: #eff7ed; border-left: 4px solid var(--dark-green); }
+.notif-item strong { color: var(--dark-green); }
+
+@keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
 
 .offcanvas { background-color: var(--dark-green); color: white; width: 300px !important; }
 .offcanvas-header { border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 20px; }
@@ -334,7 +388,6 @@ img { max-width: 100%; height: auto; border-radius: 12px; }
 .progress-container-fixed { position: fixed; top: 0; left: 0; width: 100%; height: 8px; background: #e6dcd8; z-index: 1000; }
 .progress-bar-fixed { height: 8px; background: var(--cherry-pink); width: 0%; box-shadow: 0 0 10px rgba(246, 176, 187, 0.8); }
 
-
 .quiz-container { 
     max-width: 750px; 
     margin: 30px auto; 
@@ -385,20 +438,20 @@ img { max-width: 100%; height: auto; border-radius: 12px; }
 .card.locked .btn-outline-primary { background-color: var(--disabled-gray) !important; border-color: var(--disabled-gray) !important; color: white !important;}
 
 .badge-item.clickable-badge {
-width: 110px; cursor: pointer; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-padding: 10px; border-radius: 15px;
+    width: 110px; cursor: pointer; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    padding: 10px; border-radius: 15px;
 }
 .badge-item.clickable-badge:hover { transform: scale(1.1); background-color: rgba(255, 255, 255, 0.5); }
 
 .badge-icon-container {
-font-size: 2.5rem; background: #ffffff; border-radius: 50%; width: 75px; height: 75px;
-display: flex; align-items: center; justify-content: center; margin: 0 auto;
-border: 3px solid; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); transition: all 0.3s ease;
+    font-size: 2.5rem; background: #ffffff; border-radius: 50%; width: 75px; height: 75px;
+    display: flex; align-items: center; justify-content: center; margin: 0 auto;
+    border: 3px solid; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); transition: all 0.3s ease;
 }
 
 .badge-title-text {
-margin-top: 12px; font-weight: 700; font-size: 0.85rem; line-height: 1.2;
-text-align: center; color: var(--text-color);
+    margin-top: 12px; font-weight: 700; font-size: 0.85rem; line-height: 1.2;
+    text-align: center; color: var(--text-color);
 }
 
 .modal-body h3 { margin-top: 10px; letter-spacing: -0.5px; }
@@ -432,66 +485,6 @@ text-align: center; color: var(--text-color);
 .dash-nav-btn:hover { transform: translateY(-3px); background-color: white; color: var(--dark-green); box-shadow: 0 6px 15px rgba(0,0,0,0.1);}
 .dash-nav-btn.active {background-color: white; border-color: var(--soft-green);}
 .dash-nav-btn .icon {font-size: 1.2rem;}
-
-.top-actions {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    z-index: 1050;
-}
-
-.profil-corner-new {
-    cursor: pointer; border: none; background: none; padding: 0; transition: transform 0.2s;
-}
-.profil-corner-new:hover { transform: scale(1.1); }
-
-.notif-container { position: relative; }
-
-.notif-btn {
-    background: white; border: none; width: 45px; height: 45px; border-radius: 50%;
-    color: var(--dark-green); font-size: 1.3rem; display: flex; align-items: center;
-    justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); cursor: pointer;
-    position: relative; transition: transform 0.2s;
-}
-.notif-btn:hover { transform: scale(1.1); }
-
-.notif-badge {
-    position: absolute; top: -2px; right: -2px; background-color: #d63031; color: white;
-    font-size: 0.7rem; font-weight: bold; width: 20px; height: 20px; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center; border: 2px solid white;
-}
-
-.notif-dropdown {
-    display: none; position: absolute; top: 60px; right: 0; background: white;
-    width: 300px; border-radius: 15px; box-shadow: 0 10px 30px rgba(126, 140, 105, 0.2);
-    overflow: hidden; z-index: 1001; border: 1px solid #f0f0f0; text-align: left;
-}
-.notif-dropdown.show { display: block; animation: fadeInDown 0.2s ease; }
-
-.notif-header {
-    padding: 15px; background: #f9fbf7; border-bottom: 1px solid #f0f0f0;
-    color: var(--dark-green); font-size: 1.1rem;
-}
-
-.notif-body { max-height: 350px; overflow-y: auto; }
-.notif-empty { padding: 20px; text-align: center; color: #999; font-size: 0.9rem; }
-
-.notif-item {
-    display: block; padding: 12px 15px; text-decoration: none; color: var(--text-color);
-    border-bottom: 1px solid #f9f9f9; font-size: 0.9rem; transition: background 0.2s; line-height: 1.4;
-}
-.notif-item:hover { background: #f9fbf7; color: var(--dark-green); }
-.notif-item.unread { background: #eff7ed; border-left: 4px solid var(--dark-green); }
-.notif-item strong { color: var(--dark-green); }
-
-@keyframes fadeInDown {
-    from { opacity: 0; transform: translateY(-10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
 
 @media (max-width: 768px) {
     .hero-section {
@@ -535,14 +528,6 @@ text-align: center; color: var(--text-color);
 
     .prefix-wrapper {
         flex: 0 0 85px; min-width: 85px; padding: 0 5px;
-    }
-    
-    .profil-corner {
-        top: 15px;
-        right: 15px;
-    }
-    .profil-badge {
-        width: 40px; height: 40px; font-size: 1.2rem;
     }
 
     .stats-row {
@@ -590,25 +575,16 @@ text-align: center; color: var(--text-color);
     .badge-icon-container { width: 60px; height: 60px; font-size: 2rem; }
     .badge-title-text { font-size: 0.75rem; }
 
-    .quiz-container .d-flex.justify-content-between, .quiz-container .d-flex {
-        flex-direction: column !important; gap: 15px !important; align-items: stretch !important;
-    }
-    .quiz-container .btn-success, .quiz-container .btn-outline-secondary, .quiz-container .back-link, .btn-back {
-        width: 100% !important; margin: 0 !important; padding: 15px !important; display: block; text-align: center;
-    }
-    .review-card { padding: 15px; word-wrap: break-word; overflow-wrap: break-word; }
-    .top-actions { top: 15px; right: 15px; gap: 10px; }
+    .top-right-wrapper { top: 15px; right: 15px; gap: 10px; }
     .notif-btn, .profil-badge { width: 40px; height: 40px; font-size: 1.1rem; }
-    .notif-dropdown { width: 260px; right: -40px; }
+    .notif-dropdown { width: 280px; right: -40px; }
 }
 
 @media (min-width: 769px) and (max-width: 1024px) {
-    
     .hero-section {
         padding: 60px 20px 110px 20px;
         border-radius: 0 0 40% 40% / 30px;
     }
-    
     .display-4 {
         font-size: 2.8rem;
     }
