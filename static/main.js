@@ -156,3 +156,29 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+window.toggleNotifs = function() {
+    const menu = document.getElementById('notifMenu');
+    menu.classList.toggle('show');
+    if (menu.classList.contains('show')) {
+        const badge = document.querySelector('.notif-badge');
+        if (badge) {
+            fetch('/citeste_notificari', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            }).then(response => {
+                if (response.ok) {
+                    badge.style.display = 'none';
+                }
+            });
+        }
+    }
+}
+
+document.addEventListener('click', function(event) {
+    const container = document.getElementById('notifContainer');
+    const menu = document.getElementById('notifMenu');
+    if (container && menu && !container.contains(event.target)) {
+        menu.classList.remove('show');
+    }
+});

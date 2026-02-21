@@ -170,6 +170,11 @@ TEXTE = {
         'title_reset_token': 'Setează Parolă Nouă',
         'lbl_confirm_password': 'Confirmă Parola',
         'btn_change_password': 'Schimbă Parola',
+        'notif_title': 'Notificări',
+        'notif_empty': 'Nu ai notificări noi.',
+        'notif_mention': 'te-a menționat într-un comentariu.',
+        'notif_comment': 'a comentat la postarea ta.',
+        'notif_reply': 'ți-a răspuns la comentariu.',
     },
 
     'en': {
@@ -342,6 +347,11 @@ TEXTE = {
         'title_reset_token': 'Set New Password',
         'lbl_confirm_password': 'Confirm Password',
         'btn_change_password': 'Change Password',
+        'notif_title': 'Notifications',
+        'notif_empty': 'No new notifications.',
+        'notif_mention': 'mentioned you in a comment.',
+        'notif_comment': 'commented on your post.',
+        'notif_reply': 'replied to your comment.',
     },
 
     'fr': {
@@ -514,6 +524,11 @@ TEXTE = {
         'title_reset_token': 'Définir un nouveau mot de passe',
         'lbl_confirm_password': 'Confirmer le mot de passe',
         'btn_change_password': 'Changer le mot de passe',
+        'notif_title': 'Notifications',
+        'notif_empty': 'Aucune nouvelle notification.',
+        'notif_mention': 'vous a mentionné dans un commentaire.',
+        'notif_comment': 'a commenté votre publication.',
+        'notif_reply': 'a répondu à votre commentaire.',
     },
 
     'ru': {
@@ -535,7 +550,7 @@ TEXTE = {
         'btn_restart': 'Резюме урока',
         'btn_rst_pass': 'Сбросить пароль',
         'btn_save': 'Сохранять',
-        'btn_start': 'Урок начинается',
+        'btn_start': 'Начать урок ',
         'btn_start_quiz': 'Викторина начинается',
         'btn_theory': 'Читать теорию',
         'btn_upload': 'Нагрузка',
@@ -686,5 +701,10 @@ TEXTE = {
         'title_reset_token': 'Установить новый пароль',
         'lbl_confirm_password': 'Подтвердите пароль',
         'btn_change_password': 'Изменить пароль',
+        'notif_title': 'Уведомления',
+        'notif_empty': 'Нет новых уведомлений.',
+        'notif_mention': 'упомянул(а) вас в комментарии.',
+        'notif_comment': 'прокомментировал(а) ваш пост.',
+        'notif_reply': 'ответил(а) на ваш комментарий.',
     }
 }

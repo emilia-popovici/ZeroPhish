@@ -1,4 +1,5 @@
 import os
+import re
 from datetime import datetime
 from flask import Flask, render_template, redirect, url_for, request, flash, session
 from flask_sqlalchemy import SQLAlchemy
@@ -58,9 +59,19 @@ def send_confirmation_email(user_email, username, tip = 'register'):
 @app.context_processor
 def inject_text():
     lang = session.get('lang', 'ro')
-    return dict(t=TEXTE.get(lang, TEXTE['ro']), 
-                lang_curenta=lang,
-                lista_tari= COUNTRIES
+    unread_notifs = 0
+    recent_notifs = []
+    
+    if current_user.is_authenticated:
+        unread_notifs = Notification.query.filter_by(user_id=current_user.id, is_read=False).count()
+        recent_notifs = Notification.query.filter_by(user_id=current_user.id).order_by(Notification.date_created.desc()).limit(7).all()
+        
+    return dict(
+        t=TEXTE.get(lang, TEXTE['ro']), 
+        lang_curenta=lang,
+        lista_tari=COUNTRIES,
+        unread_notifs=unread_notifs,
+        recent_notifs=recent_notifs
     )
 
 @app.route('/set_lang/<limba>')
@@ -102,6 +113,38 @@ class PhishingReport(db.Model):
     votes_phishing = db.Column(db.Integer, default=0)
     votes_safe = db.Column(db.Integer, default=0)
     uploader = db.relationship('User', backref='reports')
+
+class Vote(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    report_id = db.Column(db.Integer, db.ForeignKey('phishing_report.id'), nullable=False)
+    vote_type = db.Column(db.String(20), nullable=False)
+
+class Comment(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    text = db.Column(db.Text, nullable=False)
+    date_posted = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    report_id = db.Column(db.Integer, db.ForeignKey('phishing_report.id'), nullable=False)
+    parent_id = db.Column(db.Integer, db.ForeignKey('comment.id'), nullable=True)
+
+    author = db.relationship('User', backref='comments')
+    report = db.relationship('PhishingReport', backref=db.backref('comments', lazy=True, cascade="all, delete-orphan"))
+    replies = db.relationship('Comment', backref=db.backref('parent', remote_side=[id]), lazy=True)
+
+class Notification(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    sender_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    report_id = db.Column(db.Integer, db.ForeignKey('phishing_report.id'), nullable=True)
+    
+    notif_type = db.Column(db.String(50), nullable=False)
+    is_read = db.Column(db.Boolean, default=False)
+    date_created = db.Column(db.DateTime, default=datetime.utcnow)
+
+    receiver = db.relationship('User', foreign_keys=[user_id], backref='notifications_received')
+    sender = db.relationship('User', foreign_keys=[sender_id])
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -322,7 +365,71 @@ def verify_data():
 @login_required
 def comunitate():
     reports = PhishingReport.query.order_by(PhishingReport.date_posted.desc()).all()
-    return render_template('community.html', reports=reports, user=current_user)
+    user_votes = {v.report_id: v.vote_type for v in Vote.query.filter_by(user_id=current_user.id).all()}
+    return render_template('community.html', reports=reports, user=current_user, user_votes=user_votes)
+
+@app.route('/vote/<int:report_id>/<string:vote_type>')
+@login_required
+def vote(report_id, vote_type):
+    report = PhishingReport.query.get_or_404(report_id)
+    existing_vote = Vote.query.filter_by(user_id=current_user.id, report_id=report_id).first()
+
+    if existing_vote:
+        if existing_vote.vote_type != vote_type:
+            if existing_vote.vote_type == 'phishing': report.votes_phishing -= 1
+            else: report.votes_safe -= 1
+            
+            existing_vote.vote_type = vote_type
+            if vote_type == 'phishing': report.votes_phishing += 1
+            else: report.votes_safe += 1
+    else:
+        new_vote = Vote(user_id=current_user.id, report_id=report_id, vote_type=vote_type)
+        db.session.add(new_vote)
+        if vote_type == 'phishing': report.votes_phishing += 1
+        else: report.votes_safe += 1
+        
+    db.session.commit()
+    return redirect(url_for('comunitate'))
+
+@app.route('/adauga_comentariu/<int:report_id>', methods=['POST'])
+@login_required
+def adauga_comentariu(report_id):
+    report = PhishingReport.query.get_or_404(report_id)
+    text = request.form.get('text')
+    parent_id = request.form.get('parent_id')
+    
+    if text:
+        new_comment = Comment(text=text, user_id=current_user.id, report_id=report.id)
+        if parent_id:
+            new_comment.parent_id = int(parent_id)
+        db.session.add(new_comment)
+        
+        if report.uploader_id != current_user.id and not parent_id:
+            db.session.add(Notification(user_id=report.uploader_id, sender_id=current_user.id, report_id=report.id, notif_type='comment'))
+            
+        if parent_id:
+            parent_comment = Comment.query.get(parent_id)
+            if parent_comment and parent_comment.user_id != current_user.id:
+                db.session.add(Notification(user_id=parent_comment.user_id, sender_id=current_user.id, report_id=report.id, notif_type='reply'))
+                
+        mentioned_usernames = re.findall(r'@(\w+)', text)
+        for uname in mentioned_usernames:
+            mentioned_user = User.query.filter_by(username=uname).first()
+            if mentioned_user and mentioned_user.id != current_user.id:
+                db.session.add(Notification(user_id=mentioned_user.id, sender_id=current_user.id, report_id=report.id, notif_type='mention'))
+                
+        db.session.commit()
+        
+    return redirect(url_for('comunitate'))
+
+@app.route('/citeste_notificari', methods=['POST'])
+@login_required
+def citeste_notificari():
+    notifs = Notification.query.filter_by(user_id=current_user.id, is_read=False).all()
+    for n in notifs:
+        n.is_read = True
+    db.session.commit()
+    return {'status': 'success'}
 
 @app.route('/raporteaza', methods=['GET', 'POST'])
 @login_required
@@ -339,15 +446,6 @@ def raporteaza():
             db.session.commit()
             return redirect(url_for('comunitate'))
     return render_template('report_form.html', user=current_user)
-
-@app.route('/vote/<int:report_id>/<string:vote_type>')
-@login_required
-def vote(report_id, vote_type):
-    report = PhishingReport.query.get_or_404(report_id)
-    if vote_type == 'phishing': report.votes_phishing += 1
-    elif vote_type == 'safe': report.votes_safe += 1
-    db.session.commit()
-    return redirect(url_for('comunitate'))
 
 @app.route('/sterge_raport/<int:report_id>', methods=['POST'])
 @login_required
