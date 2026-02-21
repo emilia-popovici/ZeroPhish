@@ -175,6 +175,15 @@ TEXTE = {
         'notif_mention': 'te-a menționat într-un comentariu.',
         'notif_comment': 'a comentat la postarea ta.',
         'notif_reply': 'ți-a răspuns la comentariu.',
+        'msg_del_report_confirm': 'Sigur vrei să ștergi acest raport?',
+        'lbl_comments': 'Comentarii',
+        'ph_add_comment': 'Adaugă un comentariu...',
+        'btn_send': 'Trimite',
+        'msg_no_comments': 'Niciun comentariu. Fii primul!',
+        'msg_del_comment_confirm': 'Sigur vrei să ștergi acest comentariu?',
+        'btn_reply': 'Răspunde',
+        'btn_replyTo': 'Răspunde lui ',
+        'err_form_login': 'Eroare tehnică: Formularul nu a trimis datele corect.',
     },
 
     'en': {
@@ -352,6 +361,15 @@ TEXTE = {
         'notif_mention': 'mentioned you in a comment.',
         'notif_comment': 'commented on your post.',
         'notif_reply': 'replied to your comment.',
+        'msg_del_report_confirm': 'Are you sure you want to delete this report?',
+        'lbl_comments': 'Comments',
+        'ph_add_comment': 'Add a comment...',
+        'btn_send': 'Send',
+        'msg_no_comments': 'No comments yet. Be the first!',
+        'msg_del_comment_confirm': 'Are you sure you want to delete this comment?',
+        'btn_reply': 'Reply',
+        'btn_replyTo': 'Reply to ',
+        'err_form_login': 'Technical error: The form did not send the data correctly.',
     },
 
     'fr': {
@@ -529,6 +547,15 @@ TEXTE = {
         'notif_mention': 'vous a mentionné dans un commentaire.',
         'notif_comment': 'a commenté votre publication.',
         'notif_reply': 'a répondu à votre commentaire.',
+        'msg_del_report_confirm': 'Êtes-vous sûr de vouloir supprimer ce rapport ?',
+        'lbl_comments': 'Commentaires',
+        'ph_add_comment': 'Ajouter un commentaire...',
+        'btn_send': 'Envoyer',
+        'msg_no_comments': 'Aucun commentaire. Soyez le premier !',
+        'msg_del_comment_confirm': 'Êtes-vous sûr de vouloir supprimer ce commentaire ?',
+        'btn_reply': 'Répondre',
+        'btn_replyTo': 'Répondre à',
+        'err_form_login': 'Erreur technique: Le formulaire n\'a pas envoyé les données correctement.',
     },
 
     'ru': {
@@ -706,5 +733,14 @@ TEXTE = {
         'notif_mention': 'упомянул(а) вас в комментарии.',
         'notif_comment': 'прокомментировал(а) ваш пост.',
         'notif_reply': 'ответил(а) на ваш комментарий.',
+        'msg_del_report_confirm': 'Вы уверены, что хотите удалить этот отчет?',
+        'lbl_comments': 'Комментарии',
+        'ph_add_comment': 'Добавить комментарий...',
+        'btn_send': 'Отправить',
+        'msg_no_comments': 'Пока нет комментариев. Будьте первым!',
+        'msg_del_comment_confirm': 'Вы уверены, что хотите удалить этот комментарий?',
+        'btn_reply': 'Ответить',
+        'btn_replyTo': 'Отвечать на',
+        'err_form_login': 'Техническая ошибка: Форма не отправила данные должным образом.',
     }
 }

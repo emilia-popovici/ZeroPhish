@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ t['nav_community'] }} - ZeroPhish</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=4">
     <link rel="shortcut icon" href="{{ url_for('static', filename='icons/favicon.ico') }}">
     <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='icons/favicon-32x32.png') }}">
     <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='icons/favicon-16x16.png') }}">
@@ -15,51 +16,60 @@
     <meta name="application-name" content="ZeroPhish">
     <meta name="msapplication-TileColor" content="#7E8C69"> <meta name="theme-color" content="#ECE0DA">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <style>
+        .clickable-image { cursor: zoom-in; transition: opacity 0.2s; }
+        .clickable-image:hover { opacity: 0.8; }
+        
+        .comments-scroll { max-height: 250px; overflow-y: auto; overflow-x: hidden; }
+        .comments-scroll::-webkit-scrollbar { width: 6px; }
+        .comments-scroll::-webkit-scrollbar-track { background: transparent; }
+        .comments-scroll::-webkit-scrollbar-thumb { background-color: rgba(126, 140, 105, 0.3); border-radius: 10px; }
+    </style>
 </head>
 <body>
     <div class="top-right-wrapper">
-        <div class="notif-container" id="notifContainer">
-            <button class="notif-btn" onclick="toggleNotifs()">
-                <i class="bi bi-bell-fill"></i>
-                {% if unread_notifs > 0 %}
-                    <span class="notif-badge">{{ unread_notifs }}</span>
-                {% endif %}
-            </button>
-            
-            <div class="notif-dropdown" id="notifMenu">
-                <div class="notif-header">
-                    <strong>{{ t['notif_title'] }}</strong>
-                </div>
-                <div class="notif-body">
-                    {% if recent_notifs %}
-                        {% for n in recent_notifs %}
-                            <a href="{{ url_for('comunitate') }}" class="notif-item {{ 'unread' if not n.is_read else '' }}">
-                                <strong>@{{ n.sender.username }}</strong> 
-                                {% if n.notif_type == 'mention' %}
-                                    {{ t['notif_mention'] }}
-                                {% elif n.notif_type == 'comment' %}
-                                    {{ t['notif_comment'] }}
-                                {% elif n.notif_type == 'reply' %}
-                                    {{ t['notif_reply'] }}
-                                {% endif %}
-                            </a>
-                        {% endfor %}
-                    {% else %}
-                        <div class="notif-empty">{{ t['notif_empty'] }}</div>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
+        <button class="notif-btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#notifMenuOffcanvas">
+            <i class="bi bi-bell-fill"></i>
+            {% if unread_notifs > 0 %}
+                <span class="notif-badge">{{ unread_notifs }}</span>
+            {% endif %}
+        </button>
 
         <button class="profil-corner" type="button" data-bs-toggle="offcanvas" data-bs-target="#sideMenu">
             <div class="profil-badge">
                 {% if user.avatar %}
-                    <img src="{{ url_for('static', filename='uploads/' + user.avatar) }}">
+                    <img src="{{ url_for('static', filename='uploads/' + user.avatar) }}" alt="Avatar">
                 {% else %}
                     {{ user.username[0] | upper }}
                 {% endif %}
             </div>
         </button>
+    </div>
+
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="notifMenuOffcanvas">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title text-white">{{ t['notif_title'] }}</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            {% if recent_notifs %}
+                {% for n in recent_notifs %}
+                    <a href="{{ url_for('comunitate') }}" class="notif-item {{ 'unread' if not n.is_read else '' }}">
+                        <strong>@{{ n.sender.username }}</strong> 
+                        {% if n.notif_type == 'mention' %}
+                            {{ t['notif_mention'] }}
+                        {% elif n.notif_type == 'comment' %}
+                            {{ t['notif_comment'] }}
+                        {% elif n.notif_type == 'reply' %}
+                            {{ t['notif_reply'] }}
+                        {% endif %}
+                    </a>
+                {% endfor %}
+            {% else %}
+                <div class="text-center text-white opacity-75 mt-4">{{ t['notif_empty'] }}</div>
+            {% endif %}
+        </div>
     </div>
 
     <div class="offcanvas offcanvas-end" tabindex="-1" id="sideMenu" aria-labelledby="sideMenuLabel">
@@ -124,12 +134,12 @@
         <div class="row g-4">
             {% for report in reports %}
             <div class="col-md-4">
-                <div class="card border-0 shadow-sm" style="border-radius: 20px; overflow: hidden; position: relative;">
+                <div class="card border-0 shadow-sm" style="border-radius: 20px; overflow: hidden; position: relative; display: flex; flex-direction: column;">
                     
                     {% if report.uploader_id|int == user.id|int %}
                     <form action="{{ url_for('sterge_raport', report_id=report.id) }}" method="POST" 
                           style="position: absolute; top: 15px; left: 15px; z-index: 10;"
-                          onsubmit="return confirm('Sigur vrei să ștergi acest raport?');">
+                          onsubmit="return confirm(`{{ t['msg_del_report_confirm'] }}`);">
                         <button type="submit" class="btn btn-sm btn-danger shadow" 
                                 style="border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border: 2px solid white;">
                             &times;
@@ -138,14 +148,97 @@
                     {% endif %}
 
                     <img src="{{ url_for('static', filename='uploads/reports/' + report.screenshot) }}" 
-                         class="card-img-top p-2" style="border-radius: 25px; height: 250px; object-fit: cover;">
-                    <div class="card-body text-center">
-                        <p class="small text-muted mb-3">@{{ report.uploader.username }} • {{ report.date_posted.strftime('%d %b') }}</p>
+                         class="card-img-top p-2 clickable-image" style="border-radius: 25px; height: 250px; object-fit: cover;"
+                         onclick="openImageModal(this.src)" alt="Report Image">
+                         
+                    <div class="card-body text-center d-flex flex-column">
+                        <p class="small text-muted mb-2">@{{ report.uploader.username }} • {{ report.date_posted.strftime('%d %b') }}</p>
+                        <p class="mb-3 flex-grow-1">{{ report.description }}</p>
                         
-                        <div class="d-grid gap-2 d-md-flex justify-content-center">
-                            <a href="/vote/{{ report.id }}/phishing" class="btn btn-sm btn-danger px-3">⚠️ Phishing ({{ report.votes_phishing }})</a>
-                            <a href="/vote/{{ report.id }}/safe" class="btn btn-sm btn-success px-3">✅ Safe ({{ report.votes_safe }})</a>
+                        <div class="d-flex justify-content-center gap-2 mb-3">
+                            <a href="/vote/{{ report.id }}/phishing" 
+                               class="btn btn-sm {% if user_votes.get(report.id) == 'phishing' %}btn-danger{% else %}btn-outline-danger{% endif %} px-3 d-flex align-items-center gap-1">
+                                ⚠️ Phishing <span class="badge bg-white text-danger ms-1">{{ report.votes_phishing }}</span>
+                            </a>
+                            <a href="/vote/{{ report.id }}/safe" 
+                               class="btn btn-sm {% if user_votes.get(report.id) == 'safe' %}btn-success{% else %}btn-outline-success{% endif %} px-3 d-flex align-items-center gap-1">
+                                ✅ Safe <span class="badge bg-white text-success ms-1">{{ report.votes_safe }}</span>
+                            </a>
                         </div>
+
+                        <button class="btn btn-link text-decoration-none w-100 py-2 border-top" style="color: var(--dark-green); font-size: 0.9rem;" type="button" data-bs-toggle="collapse" data-bs-target="#comments-{{ report.id }}">
+                            <i class="bi bi-chat-dots-fill"></i> {{ report.comments|length }} {{ t['lbl_comments'] }}
+                        </button>
+
+                        <div class="collapse mt-2 text-start" id="comments-{{ report.id }}">
+                            <div class="p-3 rounded comments-scroll" style="background-color: #f9fbf7;">
+                                
+                                <div id="reply-indicator-{{ report.id }}" class="d-none mb-2 px-2 d-flex justify-content-between align-items-center" style="font-size: 0.75rem; background: #e8efe6; border-radius: 5px; padding: 5px;">
+                                    <span class="text-muted">{{t['btn_replyTo']}} <strong id="reply-to-user-{{ report.id }}" style="color: var(--dark-green);"></strong></span>
+                                    <button type="button" class="btn-close" style="font-size: 0.5rem;" onclick="cancelReply('{{ report.id }}')"></button>
+                                </div>
+
+                                <form action="{{ url_for('adauga_comentariu', report_id=report.id) }}" method="POST" class="d-flex gap-2 mb-3">
+                                    <input type="hidden" name="parent_id" id="parent-id-{{ report.id }}" value="">
+                                    
+                                    <input type="text" id="comment-input-{{ report.id }}" name="text" class="form-control form-control-sm" placeholder="{{ t['ph_add_comment'] }}" required style="border-radius: 15px;">
+                                    <button type="submit" class="btn btn-sm text-white" style="background-color: var(--dark-green); border-radius: 15px;">{{ t['btn_send'] }}</button>
+                                </form>
+
+                                <div class="comments-list">
+                                    {% for comment in report.comments if not comment.parent_id %}
+                                    
+                                    <div class="mb-3 pb-2 border-bottom">
+                                        <div class="d-flex justify-content-between align-items-start mb-1">
+                                            <div class="d-flex gap-2 align-items-center">
+                                                <strong style="color: var(--dark-green); font-size: 0.85rem;">@{{ comment.author.username }}</strong>
+                                                <span class="text-muted" style="font-size: 0.7rem;">{{ comment.date_posted.strftime('%d %b %H:%M') }}</span>
+                                            </div>
+                                            
+                                            {% if user.id|int == comment.user_id|int or user.id|int == report.uploader_id|int %}
+                                            <form action="{{ url_for('sterge_comentariu', comment_id=comment.id) }}" method="POST" class="m-0 p-0" onsubmit="return confirm(`{{ t['msg_del_comment_confirm'] }}`);">
+                                                <button type="submit" class="btn btn-link text-danger p-0 m-0 text-decoration-none opacity-75" style="font-size: 0.9rem;" title="Șterge"><i class="bi bi-trash3-fill"></i></button>
+                                            </form>
+                                            {% endif %}
+                                        </div>
+                                        
+                                        <p class="mb-1" style="font-size: 0.85rem; color: #444;">{{ comment.text }}</p>
+                                        
+                                        <button type="button" class="btn btn-link p-0 text-decoration-none text-muted mb-2" style="font-size: 0.8rem; font-weight: 800;" onclick="replyTo('{{ report.id }}', '{{ comment.id }}', '{{ comment.author.username }}')">
+                                            {{ t['btn_reply'] }}
+                                        </button>
+
+                                        <div class="ms-3 ps-3 border-start">
+                                            {% for reply in report.comments if reply.parent_id == comment.id %}
+                                            <div class="mb-2">
+                                                <div class="d-flex justify-content-between align-items-start mb-1">
+                                                    <div class="d-flex gap-2 align-items-center">
+                                                        <strong style="color: var(--dark-green); font-size: 0.8rem;">@{{ reply.author.username }}</strong>
+                                                        <span class="text-muted" style="font-size: 0.65rem;">{{ reply.date_posted.strftime('%d %b %H:%M') }}</span>
+                                                    </div>
+                                                    
+                                                    {% if user.id|int == reply.user_id|int or user.id|int == report.uploader_id|int %}
+                                                    <form action="{{ url_for('sterge_comentariu', comment_id=reply.id) }}" method="POST" class="m-0 p-0" onsubmit="return confirm(`{{ t['msg_del_comment_confirm'] }}`);">
+                                                        <button type="submit" class="btn btn-link text-danger p-0 m-0 text-decoration-none opacity-50" style="font-size: 0.8rem;"><i class="bi bi-trash3-fill"></i></button>
+                                                    </form>
+                                                    {% endif %}
+                                                </div>
+                                                <p class="mb-1" style="font-size: 0.8rem; color: #555;">{{ reply.text }}</p>
+                                                
+                                                <button type="button" class="btn btn-link p-0 text-decoration-none text-muted" style="font-size: 0.75rem; font-weight: 800;" onclick="replyTo('{{ report.id }}', '{{ comment.id }}', '{{ reply.author.username }}')">
+                                                    {{ t['btn_reply'] }}
+                                                </button>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                        </div>
+                                    {% else %}
+                                    <p class="text-muted small text-center mb-0 mt-3">{{ t['msg_no_comments'] }}</p>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -156,5 +249,62 @@
             {% endfor %}
         </div>
     </div>
+
+    <div class="modal fade" id="imageModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content bg-transparent border-0">
+                <div class="modal-body p-0 text-center position-relative">
+                    <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-3 z-3" data-bs-dismiss="modal" aria-label="Close" style="opacity: 1; background-color: rgba(0,0,0,0.5);"></button>
+                    <img src="" id="modalImageFull" class="img-fluid rounded shadow-lg" style="max-height: 90vh;">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openImageModal(src) {
+            document.getElementById('modalImageFull').src = src;
+            new bootstrap.Modal(document.getElementById('imageModal')).show();
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var notifOffcanvas = document.getElementById('notifMenuOffcanvas');
+            if (notifOffcanvas) {
+                notifOffcanvas.addEventListener('show.bs.offcanvas', function () {
+                    const badge = document.querySelector('.notif-badge');
+                    if (badge) badge.style.display = 'none';
+
+                    fetch('/citeste_notificari', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' }
+                    });
+                });
+            }
+        });
+
+        function replyTo(reportId, commentId, username) {
+            const inputField = document.getElementById('comment-input-' + reportId);
+            const hiddenParentId = document.getElementById('parent-id-' + reportId);
+            const indicator = document.getElementById('reply-indicator-' + reportId);
+            const replyUser = document.getElementById('reply-to-user-' + reportId);
+
+            if (inputField && hiddenParentId) {
+                hiddenParentId.value = commentId;
+                replyUser.innerText = `@${username}`;
+                indicator.classList.remove('d-none');
+                
+                inputField.value = `@${username} `;
+                inputField.focus();
+            }
+        }
+
+        function cancelReply(reportId) {
+            document.getElementById('parent-id-' + reportId).value = "";
+            document.getElementById('reply-indicator-' + reportId).classList.add('d-none');
+            const inputField = document.getElementById('comment-input-' + reportId);
+            inputField.value = "";
+            inputField.placeholder = "{{ t['ph_add_comment'] }}";
+        }
+    </script>
 </body>
 </html>

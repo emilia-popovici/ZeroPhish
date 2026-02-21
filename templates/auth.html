@@ -80,7 +80,7 @@
             {% else %}
                 <div class="mb-3">
                     <label>{{ t['lbl_login_input']}} *</label>
-                    <input type="text" name="login_id" class="form-control" required>
+                    <input type="text" name="login_id" class="form-control" placeholder="{{ t['lbl_login_input'] }}" required>
                 </div>
             {% endif %}
             
@@ -200,7 +200,6 @@
                         fieldValid = value.length > 0;
                     }
 
-                    // Caută mesajul de eroare în containerul părintesc
                     const errorMsg = input.closest('.mb-3, .mb-4, .col')?.querySelector('.error-msg');
                     
                     if (!fieldValid && value.length > 0) {

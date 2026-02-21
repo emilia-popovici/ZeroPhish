@@ -152,21 +152,38 @@ def load_user(user_id):
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    if current_user.is_authenticated: return redirect(url_for('home'))
+    if current_user.is_authenticated: 
+        return redirect(url_for('home'))
+        
     lang = session.get('lang', 'ro')
     t = TEXTE.get(lang, TEXTE['ro'])
+    
     if request.method == 'POST':
         login_id = request.form.get('login_id') 
         password = request.form.get('password')
-        user = User.query.filter(or_(User.username == login_id, User.email == login_id, User.phone == login_id)).first()
+        
+        if not login_id:
+            flash(t['err_form_login'], 'danger')
+            return redirect(url_for('login'))
+
+        user = User.query.filter(or_(
+            User.username == login_id, 
+            User.email == login_id, 
+            User.phone == login_id
+        )).first()
+        
         if user and check_password_hash(user.password, password):
-            if not user.is_email_verified:
+            
+            if getattr(user, 'is_email_verified', False) in [False, None, 0]:
                 flash(t['err_email_not_verified'], 'warning')
                 return redirect(url_for('login'))
+                
             login_user(user)
             return redirect(url_for('home'))
+            
         else:
             flash(t['msg_login_fail'], 'danger')
+            
     return render_template('auth.html', mode='login')
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -400,6 +417,7 @@ def adauga_comentariu(report_id):
     
     if text:
         new_comment = Comment(text=text, user_id=current_user.id, report_id=report.id)
+        
         if parent_id:
             new_comment.parent_id = int(parent_id)
         db.session.add(new_comment)
@@ -418,6 +436,17 @@ def adauga_comentariu(report_id):
             if mentioned_user and mentioned_user.id != current_user.id:
                 db.session.add(Notification(user_id=mentioned_user.id, sender_id=current_user.id, report_id=report.id, notif_type='mention'))
                 
+        db.session.commit()
+        
+    return redirect(url_for('comunitate'))
+
+@app.route('/sterge_comentariu/<int:comment_id>', methods=['POST'])
+@login_required
+def sterge_comentariu(comment_id):
+    comment = Comment.query.get_or_404(comment_id)
+    
+    if current_user.id == comment.user_id or current_user.id == comment.report.uploader_id:
+        db.session.delete(comment)
         db.session.commit()
         
     return redirect(url_for('comunitate'))

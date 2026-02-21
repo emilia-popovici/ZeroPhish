@@ -19,15 +19,51 @@
 </head>
 <body>
 
-    <button class="profil-corner" type="button" data-bs-toggle="offcanvas" data-bs-target="#sideMenu">
-        <div class="profil-badge">
-            {% if user.avatar %}
-                <img src="{{ url_for('static', filename='uploads/' + user.avatar) }}">
+     <div class="top-right-wrapper">
+    
+        <button class="notif-btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#notifMenuOffcanvas">
+            <i class="bi bi-bell-fill"></i>
+            {% if unread_notifs > 0 %}
+                <span class="notif-badge">{{ unread_notifs }}</span>
+            {% endif %}
+        </button>
+
+        <button class="profil-corner" type="button" data-bs-toggle="offcanvas" data-bs-target="#sideMenu">
+            <div class="profil-badge">
+                {% if user.avatar %}
+                    <img src="{{ url_for('static', filename='uploads/' + user.avatar) }}" alt="Avatar">
+                {% else %}
+                    {{ user.username[0] | upper }}
+                {% endif %}
+            </div>
+        </button>
+        
+    </div>
+
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="notifMenuOffcanvas">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title text-white">{{ t['notif_title'] }}</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            {% if recent_notifs %}
+                {% for n in recent_notifs %}
+                    <a href="{{ url_for('comunitate') }}" class="notif-item {{ 'unread' if not n.is_read else '' }}">
+                        <strong>@{{ n.sender.username }}</strong> 
+                        {% if n.notif_type == 'mention' %}
+                            {{ t['notif_mention'] }}
+                        {% elif n.notif_type == 'comment' %}
+                            {{ t['notif_comment'] }}
+                        {% elif n.notif_type == 'reply' %}
+                            {{ t['notif_reply'] }}
+                        {% endif %}
+                    </a>
+                {% endfor %}
             {% else %}
-                {{ user.username[0] | upper }}
+                <div class="text-center text-white opacity-75 mt-4">{{ t['notif_empty'] }}</div>
             {% endif %}
         </div>
-    </button>
+    </div>
 
     <div class="offcanvas offcanvas-end" tabindex="-1" id="sideMenu">
         <div class="offcanvas-header d-flex align-items-center">
